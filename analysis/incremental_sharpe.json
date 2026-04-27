@@ -1,0 +1,65 @@
+{
+  "computed_at": "2026-04-27T10:26:33.459204+00:00",
+  "n_events": 75,
+  "horizon": "t_0_to_30",
+  "step1_baseline_phase_only": {
+    "n_long": 23,
+    "n_short": 23,
+    "long_mean_car": -0.0129,
+    "short_mean_car": -0.029,
+    "spread": 0.0161,
+    "sharpe": 0.3012,
+    "n_events_total": 46
+  },
+  "step2_full_phase_plus_pivotal": {
+    "n_long": 23,
+    "n_short": 23,
+    "long_mean_car": 0.0063,
+    "short_mean_car": -0.0133,
+    "spread": 0.0196,
+    "sharpe": 0.3676,
+    "n_events_total": 46
+  },
+  "step2b_pivotal_only": {
+    "n_long": 23,
+    "n_short": 23,
+    "long_mean_car": -0.0172,
+    "short_mean_car": -0.0683,
+    "spread": 0.0511,
+    "sharpe": 1.1983,
+    "n_events_total": 46
+  },
+  "step2c_orthogonalized_within_phase": {
+    "n_total": 70,
+    "phase3": {
+      "n_stratum": 26,
+      "n_long": 8,
+      "n_short": 8,
+      "long_mean_car": -0.0498,
+      "short_mean_car": -0.0713,
+      "spread": 0.0216,
+      "sharpe": 0.2674
+    },
+    "phase2": {
+      "n_stratum": 44,
+      "n_long": 14,
+      "n_short": 14,
+      "long_mean_car": -0.023,
+      "short_mean_car": -0.0769,
+      "spread": 0.0539,
+      "sharpe": 1.0823
+    }
+  },
+  "delta_sharpe_full_minus_baseline": 0.0664,
+  "best_incremental_sharpe": 0.0664,
+  "trigger2_threshold_delta_sharpe": 0.3,
+  "trigger2_pass_additive": false,
+  "trigger2_pass_orthogonal": false,
+  "trigger2_pass": false,
+  "interpretation": "Step 1 baseline uses phase number as CTP-LLM proxy (higher phase = higher prior transition probability). Step 2 full adds LLM 3-axis pivotal-shift score. Δ Sharpe is event-level signal addition. Phase 1 trigger #2 PASS: Δ ≥ 0.3 (Δ < 0.3 → writeup-only freeze, not full kill — negative incremental publishable per CLAUDE.md spec).",
+  "simplification_caveats": [
+    "Real CTP-LLM is a fine-tuned GPT-3.5 with full protocol text input. Our baseline uses just the phase number as a transparent proxy.",
+    "Real CTP-LLM 흡수 measure is monthly cross-section portfolio Sharpe; ours is event-level Sharpe at small n.",
+    "Phase 1 trigger #7 lock requires final analyzable n≥1500. Until full dispatch + sponsor/CAR pipeline, this Δ is TENTATIVE."
+  ]
+}

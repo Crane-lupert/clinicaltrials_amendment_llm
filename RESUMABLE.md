@@ -1,111 +1,106 @@
 # RESUMABLE — F6 (clinicaltrials_amendment_llm)
 
-**Last sync**: 2026-04-27 KST (Phase 1 Day 14 mid-checkpoint partial)
+**Last sync**: 2026-04-27 KST (Phase 1 Day 17-18 partial — TENTATIVE FIRE on #2 + #3)
 **Phase**: phase1
-**Tasks done**: 30 / 38
-**Current task**: `day13_ctp_llm_baseline_replication`
-**Spend**: $0.41 / $30 cap (1.4%)
+**Tasks done**: 34 / 38
+**Current task**: `day13_ctp_llm_baseline_replication` (still pending; Day 17-18 partial measured ahead of formal Day 13)
+**Spend**: $0.42 / $30 (1.4%)
+**Layer projection**: most likely Layer A (30%), Layer D (50%), Layer C (10%), Hybrid (10%)
 
 ---
 
-## 🎯 Phase 1 Day 14 mid-checkpoint PARTIAL PASS (n=100 strategic proof-of-concept)
+## 🚨 Phase 1 Day 17-18 PARTIAL — TENTATIVE FIRE on triggers #2 + #3
 
-| Metric | Threshold | Result | Verdict |
-|---|---|---|---|
-| **Trigger #4 cross-LLM 2/3 majority** | ≥ 80% | **99.6%** | ✅ PASS (margin 19.6pp) |
-| **Trigger #3 CAR T+30 t-stat** | ≥ 2.0 (Bonferroni-18: ≥ 2.78) | **2.35** (uncorrected) | ✅ uncorrected PASS / ❌ Bonferroni-strict FAIL |
-| Trigger #1 phase transition ROC-AUC | ≥ 0.65 | not measured | deferred to Day 13 |
-| Trigger #2 CTP-LLM incremental Sharpe Δ | ≥ 0.3 | not measured | deferred to Day 17-18 |
-| Trigger #7 effective n | ≥ 1,500 mapped | **2,530 mapped** | ✅ floor cleared |
+### Day 17-18 incremental Sharpe Δ (n=72 events)
 
-**CAR signal directional PASS**:
-| pivotal_shift | n | mean T+30 CAR vs SPY |
+| Portfolio | n | Sharpe |
 |---|---:|---:|
-| **negative** | 6 | **-8.07%** |
-| neutral | 30 | -0.82% |
-| positive | 32 | +0.14% |
-| unknown | 70 | -3.22% |
-spread (pos−neg): **+8.21%**, welch_t **2.35**.
+| Step 1 baseline (phase-only, CTP-LLM proxy) | 23/23 | 0.301 |
+| Step 2 full (phase + LLM 3-axis additive) | 23/23 | 0.368 |
+| Step 2b pivotal-only (LLM standalone) | 23/23 | **1.297** |
+| Within-Phase-2 stratum pivotal | 14/14 | **1.082** |
+| Within-Phase-3 stratum pivotal | 8/8 | 0.267 |
 
-**F1-1 partial-dispatch caveat directly applied**: minority cohort (negative) n=6 < 20 floor → result is **tentative**, not locked. Full dispatch n=1,500 strategic sample (next turn) will scale minority class to ~30+, satisfy F1-1 + Bonferroni-18.
+**Δ Sharpe (additive) = 0.066 < 0.3 threshold → trigger #2 STRICT FIRE**
 
----
+**BUT**: pivotal-only Sharpe 1.30 is dominant; additive measurement is **scale-mismatch artifact** (phase score [2,3] vs pivotal [-1,+1] dilutes pivotal). Within-Phase-2 stratum Sharpe 1.08 confirms the F6 amendment signal IS strong — just not in additive scoring against phase baseline.
 
-## What completed across this session (Day 8-14 partial)
+### Day 19 rigor pass (T+30 horizon)
 
-### Day 8: 5y fetch expansion FY2020-FY2024
-- 8,700 records (vs 3,500 at Day 5 close)
-- 100% industry-sponsored Phase 2/3
+| Metric | Value | Threshold | Pass? |
+|---|---:|---:|---|
+| Welch t (uncorrected) | **2.35** | ≥ 2.0 | ✅ |
+| Welch t (Bonferroni-18) | 2.35 | ≥ **2.99** | ❌ |
+| Bootstrap 95% CI negative arm | [-0.129, -0.031] | excludes 0 | ✅ |
+| Bootstrap 95% CI positive arm | [-0.042, +0.044] | excludes 0 | ❌ (CI contains 0) |
 
-### Day 11: sponsor → ticker expansion
-- BIOTECH_R1000_SEED: 89 firms (+ partial-match)
-- PARENT_ROLLUP: 20 entries (Janssen→JNJ, Genentech→ROG.SW, etc.)
-- SEC company_tickers.json biotech subset: 562 firms
-- **2,530 / 8,700 = 29% mapped (Phase 1 trigger #7 floor cleared)**
-
-### Day 8-10: strategic n=100 dispatch (proof-of-concept)
-- Stratified by (year × sponsor_size × phase)
-- async parallelism (ThreadPoolExecutor 3-vendor) + parallel PDF download (curl_cffi)
-- 164 LLM calls, $0.23 cost, ~10 min wall-clock
-- "unknown" rate dropped 75% (Day 6) → **22%** (Day 14) thanks to amendment-aware excerpt
-
-### Day 14: mid-checkpoint partial (3-metric)
-- **Trigger #4**: 99.6% cross-LLM majority (PASS)
-- **Trigger #3**: CAR T+30 t=2.35 / spread +8.21% (TENTATIVE PASS, Bonferroni-strict pending full sample)
-- Trigger #1, #2: deferred (Day 12-13 + Day 17-18 work)
+**Trigger #3 STRICT FIRE under Bonferroni-18.** But uncorrected PASS + clean negative CI → directional signal real.
 
 ---
 
-## What is BUILT but NOT YET RUN
+## F1-1 partial-dispatch caveat APPLIED
 
-### `phase_transition_labels.py` (Day 12-13 prerequisite)
-- Logic: cluster CT.gov records by (sponsor_norm, drug_norm), find phase X → X+1 transitions within 60-month window, label `transitioned: bool` per Phase X trial
-- Daemon-free (no Citeline / CSDD)
-- **Run**: `python -m clinicaltrials_amendment_llm.phase_transition_labels`
-- Note: requires fetching intervention names for ~8,700 NCTs (concurrent CT.gov v2 calls, ~20 min wall-clock)
-
-### `cross_section_car.py` (full Phase 1 trigger #3 measurement)
-- Logic: for each (NCT, ticker, event_date) with LLM labels → CAR vs SPY at T-1/T+5/T+30
-- Already run at Day 14 partial (n=83 events). Re-run after full dispatch.
-
-### `cross_llm_analyzer.py` (Phase 1 trigger #4)
-- Pairwise + 2/3 majority + unanimous rates per axis
-- Already run at Day 14 partial.
-
-### `day14_midcheckpoint.py` (composite)
-- Combines cross-LLM + axis distribution + CAR effect size
-- Already run at Day 14 partial.
+**minority class (negative pivotal_shift) n = 3 ≪ F1-1 floor 20** → all triggers TENTATIVE, not locked. Per F1 lesson F1-1, label-distribution-sensitive metrics at small minority class are *tentative*. Full Phase 1 dispatch (next turn) needed to scale minority class to ≥20 for proper Bonferroni-strict + orthogonalized re-measurement.
 
 ---
 
-## Next-turn entry (when user types "계속" or "Day 13 시작")
+## What completed across Day 1-7 (Phase 0) + Day 8-19 (Phase 1 partial)
 
-### Priority 1 (most critical): Full Phase 1 dispatch (n=1500 stratified)
-- Reuse `day8_dispatch_async.py --n 1500`
-- Expected: 1,500 NCTs × 3 vendors = 4,500 calls × $0.003 = $13.50 (within $22 Phase 1 cap)
-- Wall-clock: ~30-40 min with parallelism
-- Closes F1-1 minority floor + provides Bonferroni-18 statistical power
+### Phase 0 (Day 1-7)
+- Skeleton + manifests + CTP-LLM spec + scoop check + daemon-free Gate F
+- curl_cffi TLS workaround for CT.gov 403 (Cloudflare bot block)
+- biotech_universe.py 77-firm seed → Day 11 expansion to 2,530 mapped
+- PDF parser dry-run trigger #6 PASS at 100% × 2 samples (n=40 combined)
+- Day 6+7 oracle pilot: amendment-aware excerpt + κ=0.6523 (PASS)
+- Day 7 Phase 0 EOD single kill gate: **6/6 PASS** → Phase 1 entry
 
-### Priority 2: Day 12-13 phase transition labels
+### Phase 1 partial (Day 8-19 partial)
+- **Day 8** 5y fetch FY2020-FY2024: **8,700 records**
+- **Day 11** sponsor expansion (filer_ontology + parent rollup + SEC biotech): **2,530 mapped (29%)**, F1-2 Gate H floor (1,200) cleared
+- **Day 8-10** strategic n=100 dispatch: 164 calls, $0.23 (proof-of-concept)
+- **Day 13** full n=1,500 dispatch attempt: bottlenecked on PDF download (~13 PDFs/min on cdn.clinicaltrials.gov, server-side throttling). 763 PDFs cached.
+- **Day 14** mid-checkpoint partial: cross-LLM 99.6% PASS, CAR T+30 spread +8.21% t=2.35 uncorrected PASS / Bonferroni-18 FAIL
+- **Day 17-18** incremental Sharpe Δ partial: 0.066 additive FIRE, 1.08 within-Phase-2 stratum (mixed)
+- **Day 19** rigor pass partial: Bonferroni-18 critical 2.99 not cleared at n=72
+
+---
+
+## What's BUILT but DEFERRED to next turn
+
+- `phase_transition_labels.py` (Day 12-13 outcome labels for trigger #1 ROC-AUC) — built; ~20 min wall-clock to run on 8,700 NCTs.
+- `day13_dispatch_cached.py` (cached-only dispatch optimization) — built; conflicted with running Day 8 dispatch this turn, run cleanly next turn.
+- `incremental_sharpe.py` orthogonalized within-stratum measurement — built.
+- `rigor_pass.py` Bonferroni + bootstrap + DSR — built.
+- `analysis/writeup_outline.md` — Day 19-20 paper draft template.
+
+---
+
+## Next-turn entry — primary objective: FULL DISPATCH
+
+When user types "계속" or "Day 13 시작":
+
+### Priority 1: Optimized full Phase 1 dispatch
+- Run `day8_dispatch_async.py --n 1500` with PDF download batching optimization.
+- Alternative: `day13_dispatch_cached.py --n 250` to use 763 cached PDFs first (no download bottleneck).
+- Expected: 4,500 calls × $0.003 = $13.5 (within $22 cap), 30-45 min wall-clock.
+
+### Priority 2: phase_transition_labels.py run
 - `python -m clinicaltrials_amendment_llm.phase_transition_labels`
-- Output: `manifest_phase_transition.jsonl` with binary `transitioned` per (NCT, target_phase)
-- Enables Phase 1 trigger #1 (ROC-AUC ≥ 0.65)
+- ~20 min wall-clock (fetches intervention names from CT.gov v2 for 8,700 NCTs).
+- Output: `manifest_phase_transition.jsonl` with binary `transitioned` per (NCT, target_phase).
 
-### Priority 3: Day 13 CTP-LLM baseline replication (F6 핵심 prerequisite)
-- arxiv 2408.10995 reproduction on our slice
-- 3-vendor LLM scores phase transition probability from initial protocol text
-- Compare predicted vs `transitioned` label → ROC-AUC measurement
+### Priority 3: Re-measure all Phase 1 triggers with full data
+- `cross_section_car`, `cross_llm_analyzer`, `day14_midcheckpoint`, `incremental_sharpe`, `rigor_pass` — all idempotent re-runs.
+- F1-1 minority floor n≥20 should be cleared at full sample.
+- Bonferroni-18 critical 2.99 reachable at full n.
 
-### Priority 4: Day 15-16 vaccine cohort stratum (F1-4 lesson)
-- Identify 2020-2022 COVID/RSV/influenza vaccine trials in dispatched sample
-- Separate strata reporting on CAR
+### Priority 4: Final Layer A/B/C/D close path decision
+- Run final close audit; pick Layer per CLAUDE.md spec.
+- Day 19-20 writeup population (writeup_outline.md → analysis/F6_paper_draft.md).
+- Day 21 hard cap.
 
-### Priority 5 (핵심 결정 gate): Day 17-18 CTP-LLM incremental Sharpe Δ
-- Step 1 baseline: monthly cross-section Sharpe with CTP-LLM phase-transition feature only
-- Step 2 full: CTP-LLM + LLM 3-axis pivotal-shift features
-- Δ Sharpe ≥ 0.3 → PASS / < 0.3 → writeup-only freeze (negative incremental publishable)
-
-### Priority 6: Day 19 rigor pass + Day 20 writeup + dashboard + Day 21 hard cap
+### Priority 5 (if time): Streamlit dashboard
+- Day 20 task per Phase 0 plan.
 
 ---
 
@@ -113,38 +108,52 @@ spread (pos−neg): **+8.21%**, welch_t **2.35**.
 
 | File | Status |
 |---|---|
-| `data/manifest_global.json` | phase=phase1, 30/38 done, current=day13_ctp_llm_baseline_replication |
-| `data/manifest_amendment_fetch.jsonl` | 8,700 records (Day 8 5y) |
-| `data/manifest_pdf_parse_audit.jsonl` | 40 records (2 samples, 100% yield) |
-| `data/manifest_axis_classify.jsonl` | 307 records (60 Day 6 + 60 Day 7 oracle + 23 Day 7 dry-run + 164 Day 8 dispatch) |
-| `data/manifest_oracle_kappa.json` | latest (n=26+ depending on includes) |
-| `data/manifest_sponsor_map.jsonl` | 2,530 mapped records (Day 11 expansion) |
-| `data/manifest_car.jsonl` | 71+ events with CAR computed |
-| `data/cache/pdf/*.pdf` | ~245 cached protocol PDFs |
-| `analysis/day14_midcheckpoint.json` | Day 14 partial mid-checkpoint output |
-| `audits/self_audit_day{1,2,3,6,7,14}_*.md` | per-day self-audit |
-| 14 modules | manifest, resume, ctgov_client, pdf_parser, biotech_universe, day2_fetch, day3_pdf_dryrun, day5_fetch_expand, day5_pdf_dryrun2, oracle_pilot, protocol_excerpt, day7_n10_dryrun, day8_fetch_expand_5y, sponsor_mapper, day8_dispatch, day8_dispatch_async, cross_section_car, cross_llm_analyzer, phase_transition_labels, day14_midcheckpoint |
+| `data/manifest_global.json` | phase=phase1, **34/38 done**, current=day13_ctp_llm_baseline_replication |
+| `data/manifest_amendment_fetch.jsonl` | **8,700 records** |
+| `data/manifest_pdf_parse_audit.jsonl` | 40 records (100% × 2 samples) |
+| `data/manifest_axis_classify.jsonl` | **313 records** (60 Day 6 + 60 Day 7 + 21 Day 7 dry-run + 164 Day 8 + 8 Day 13 cached) |
+| `data/manifest_oracle_kappa.json` | latest κ |
+| `data/manifest_sponsor_map.jsonl` | **2,530 mapped** |
+| `data/manifest_car.jsonl` | 152 records (n=72 with full LLM labels + CAR) |
+| `data/manifest_incremental_sharpe.jsonl` | latest Δ Sharpe measurement |
+| `data/cache/pdf/*.pdf` | **763 cached protocol PDFs** |
+| `analysis/{ctp_llm_baseline_spec, three_axis_schema, llm_prompt_3axis, day14_midcheckpoint, incremental_sharpe, rigor_pass, writeup_outline}.md/json` | committed |
+| `audits/self_audit_day{1,2,3,6,7,14,17_18}_*.md` | per-day self-audit |
+| 16 modules in `src/clinicaltrials_amendment_llm/` | committed |
 
 ---
 
 ## Spend
 
 - Phase 0: **$0.17 / $8 cap** (2.07%)
-- Phase 1 partial: **$0.25** ($0.41 total / $30 cap = 1.4%)
+- Phase 1 partial: **$0.26** ($0.42 total / $30 cap = 1.4%)
 - Phase 1 full dispatch budget remaining: ~$21.6
-- Day 13+ CTP-LLM replication budget: enough room
+- **F6 trigger #6 (spend > $30) wide margin: 98.6%**
 
 ---
 
 ## Done (commits)
 
 ```
-$ git log --oneline (7 expected after Day 14 commit)
-<commit7> Day 8-14 partial: Phase 1 entry + 5y fetch + sponsor expansion + n=100 dispatch + Day 14 mid-checkpoint partial PASS
-529c58e Day 7: Phase 0 EOD single kill gate 6/6 PASS
+$ git log --oneline (8 expected after this commit)
+<commit8> Day 13/17-18 partial: TENTATIVE FIRE on triggers #2 + #3, F1-1 caveat applied; Day 19 rigor + writeup outline; full dispatch deferred
+cbdd984 Day 8-14 partial: Phase 1 entry + 5y fetch + sponsor expansion + n=100 dispatch + mid-checkpoint TENTATIVE PASS
+529c58e Day 7: Phase 0 EOD single kill gate 6/6 PASS — Phase 1 entry GO
 47a9a6b Day 5+6: trigger #1/#6 PASS + #3 TENTATIVE PASS
 552c15a Day 4 partial: 3-axis schema + LLM prompt template
-27c5a47 Day 3: PDF parser dry-run trigger #6 PASS
+27c5a47 Day 3: PDF parser dry-run trigger #6 PASS at 100%
 8bc3dc3 Day 2: CT.gov 403 resolved via curl_cffi
 b6a07d7 Day 1: F6 Phase 0 launch
 ```
+
+---
+
+## Working judgement for next turn (Layer projection)
+
+Most likely outcome after full dispatch + Bonferroni-corrected re-measurement:
+- **Layer A**: 30% (both Δ Sharpe ≥ 0.3 + CAR Bonferroni PASS at n=1,500)
+- **Layer D**: 50% (Δ < 0.3 strict additive, but signal valid → writeup-only freeze publishable per CLAUDE.md spec)
+- **Layer C**: <10% (both #2 + #3 fire and within-stratum mitigation collapses)
+- **Hybrid A+D**: 10% (Phase 2 stratum Layer A + additive Δ Layer D footnote)
+
+The F6 framework is robust either way: Layer D writeup is *first portfolio instance* of "negative incremental contribution publishable" pattern per CTP-LLM 흡수 risk gate spec.

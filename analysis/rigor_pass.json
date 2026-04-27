@@ -1,0 +1,32 @@
+{
+  "computed_at": "2026-04-27T10:22:51.355984+00:00",
+  "horizon": "t_0_to_30",
+  "n_long_positive": 32,
+  "n_short": 6,
+  "short_arm": "negative",
+  "mean_positive_car": 0.0014,
+  "mean_short_car": -0.0807,
+  "spread": 0.0821,
+  "welch_t_uncorrected": 2.3528,
+  "welch_t_threshold_uncorrected": 2.0,
+  "welch_t_threshold_bonferroni_18": 2.99,
+  "pass_uncorrected": true,
+  "pass_bonferroni_18": false,
+  "bootstrap_ci_positive_95pct": [
+    -0.0418,
+    0.0443
+  ],
+  "bootstrap_ci_short_95pct": [
+    -0.1286,
+    -0.0306
+  ],
+  "bootstrap_ci_zero_in_positive": true,
+  "event_level_sharpe": 0.1182,
+  "deflated_sharpe_p_value_n_trials_18": 1.0,
+  "by_pivotal_count": {
+    "negative": 6,
+    "neutral": 30,
+    "positive": 32,
+    "unknown": 70
+  }
+}
