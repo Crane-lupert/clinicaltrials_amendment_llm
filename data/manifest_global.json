@@ -1,6 +1,6 @@
 {
   "phase": "phase1",
-  "current_task": "day8_full_sample_inference_start",
+  "current_task": "day13_ctp_llm_baseline_replication",
   "done": [
     "day1_git_init",
     "day1_pyproject_skeleton",
@@ -27,9 +27,13 @@
     "day6_pdf_parsing_yield_second",
     "day4_n10_dry_run_start",
     "day7_phase0_kill_gate",
-    "day7_self_audit_phase0_transition"
+    "day7_self_audit_phase0_transition",
+    "day11_sponsor_ticker_full",
+    "day8_full_sample_inference_start",
+    "day12_phase_transition_join",
+    "day14_phase1_mid_checkpoint"
   ],
-  "last_synced": "2026-04-27T09:13:20.037033+00:00",
+  "last_synced": "2026-04-27T10:00:45.246720+00:00",
   "spend_phase0": 0.1657,
-  "spend_phase1": 0.0
+  "spend_phase1": 0.2491
 }

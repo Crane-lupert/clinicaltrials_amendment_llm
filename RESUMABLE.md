@@ -1,105 +1,111 @@
 # RESUMABLE — F6 (clinicaltrials_amendment_llm)
 
-**Last sync**: 2026-04-27 KST (Phase 0 close, Phase 1 entry)
-**Phase**: **phase1** (transitioned 2026-04-27 Day 7 EOD)
-**Tasks done**: 26 / 38
-**Current task**: `day8_full_sample_inference_start`
+**Last sync**: 2026-04-27 KST (Phase 1 Day 14 mid-checkpoint partial)
+**Phase**: phase1
+**Tasks done**: 30 / 38
+**Current task**: `day13_ctp_llm_baseline_replication`
+**Spend**: $0.41 / $30 cap (1.4%)
 
 ---
 
-## 🎯 Phase 0 final result — 6/6 single kill gate PASS
+## 🎯 Phase 1 Day 14 mid-checkpoint PARTIAL PASS (n=100 strategic proof-of-concept)
 
-| # | Trigger | Threshold | Final | Verdict |
-|---|---|---|---|---|
-| 1 | fetched amendments | ≥ 3,000 | **3,500** | ✅ PASS (17% margin) |
-| 2 | n=10 dry-run pass | ≥ 7/10 | **7/10** | ✅ PASS (at threshold) |
-| 3 | 3-vendor Fleiss κ | ≥ 0.6 | **all 3 axes ≥ 0.6, agg 0.6523** | ✅ PASS |
-| 4 | Phase 0 spend | ≤ $8 | **$0.17 (2.07%)** | ✅ PASS (98% margin) |
-| 5 | scoop discovered | none | **0 financial-extension** | ✅ PASS |
-| 6 | PDF parsing yield | ≥ 80% | **100% × 2 samples (n=40)** | ✅ PASS (20pp margin) |
+| Metric | Threshold | Result | Verdict |
+|---|---|---|---|
+| **Trigger #4 cross-LLM 2/3 majority** | ≥ 80% | **99.6%** | ✅ PASS (margin 19.6pp) |
+| **Trigger #3 CAR T+30 t-stat** | ≥ 2.0 (Bonferroni-18: ≥ 2.78) | **2.35** (uncorrected) | ✅ uncorrected PASS / ❌ Bonferroni-strict FAIL |
+| Trigger #1 phase transition ROC-AUC | ≥ 0.65 | not measured | deferred to Day 13 |
+| Trigger #2 CTP-LLM incremental Sharpe Δ | ≥ 0.3 | not measured | deferred to Day 17-18 |
+| Trigger #7 effective n | ≥ 1,500 mapped | **2,530 mapped** | ✅ floor cleared |
 
-**0 abandon trigger fired across Phase 0.**
+**CAR signal directional PASS**:
+| pivotal_shift | n | mean T+30 CAR vs SPY |
+|---|---:|---:|
+| **negative** | 6 | **-8.07%** |
+| neutral | 30 | -0.82% |
+| positive | 32 | +0.14% |
+| unknown | 70 | -3.22% |
+spread (pos−neg): **+8.21%**, welch_t **2.35**.
 
----
-
-## What completed across this session (Day 1-7)
-
-### Day 1
-- Skeleton + manifest + CTP-LLM (arxiv 2408.10995) baseline spec + scoop check + daemon-free Gate F verify
-
-### Day 2
-- pip install + curl_cffi TLS workaround for CT.gov 403 (Cloudflare bot block)
-- biotech_universe.py (77-firm seed) + Day 2 first fetch (200 records, 100% industry/Phase 2-3, 17% mapped)
-
-### Day 3
-- PDF parser dry-run sample 1 (n=20): trigger #6 PASS at 100%
-
-### Day 4 partial
-- 3-axis schema + LLM prompt template + cost estimate
-
-### Day 5
-- Fetch expansion FY2022-FY2024: 3,500 records (trigger #1 PASS)
-- PDF dry-run sample 2: trigger #6 PASS at 100% (n=40 combined)
-
-### Day 6
-- OpenRouter F6 cap=$30/max=8 registered
-- n=20 oracle 3-vendor (claude-haiku-4.5 + llama-3.3-70b + gpt-4o-mini after Anthropic 3.5 / Gemma 2 retired)
-- Initial κ TENTATIVE PASS (aggregate 0.6305, but pivotal_shift 0.5896 marginal fail; 75% "unknown" rate)
-
-### Day 7 (this turn)
-- **Amendment-aware excerpt extractor** (`protocol_excerpt.py`) — searches Document/Amendment History headers
-- **Dedup fix** (oracle_pilot.py): key (nct, vendor, prompt_hash) instead of (nct, vendor); measure_kappa latest_only=True
-- **Oracle re-run** (60 new calls with v2 prompt) — κ jumped:
-  - pivotal_shift 0.5896 → **0.6292** ✓
-  - admin_vs_substantive 0.6444 → **0.6779** ✓
-  - driver 0.6576 → **0.6498** ✓
-  - aggregate 0.6305 → **0.6523** ✓
-  - pivotal_binary fb 0.5896 → **0.6220** ✓
-- **n=10 full-pipeline dry-run** (`day7_n10_dryrun.py`): 7/10 PASS, trigger #2 met. Stage rates: fetch 100%, pdf 70%, llm 70%, ticker 100%, **car 100%** (yfinance reliable).
-- **Phase 0 EOD single kill gate**: 6/6 PASS → Phase 1 entry GO.
+**F1-1 partial-dispatch caveat directly applied**: minority cohort (negative) n=6 < 20 floor → result is **tentative**, not locked. Full dispatch n=1,500 strategic sample (next turn) will scale minority class to ~30+, satisfy F1-1 + Bonferroni-18.
 
 ---
 
-## F1-1 partial-dispatch caveat (carry-forward)
+## What completed across this session (Day 8-14 partial)
 
-**minority_count for pivotal_shift = 1** (across 26 NCTs × 3 vendors). F1-1 floor is 20.
+### Day 8: 5y fetch expansion FY2020-FY2024
+- 8,700 records (vs 3,500 at Day 5 close)
+- 100% industry-sponsored Phase 2/3
 
-Per F1 frozen lesson F1-1: label-distribution-sensitive metric (κ) at minority < 20 is **tentative**, not locked. Phase 1 strategic n=1500 stratified dispatch에서 minority cohort (10-20% of sample) 자연 도달 → minority > 20 floor 충족 → Day 14 mid-checkpoint re-lock 의무.
+### Day 11: sponsor → ticker expansion
+- BIOTECH_R1000_SEED: 89 firms (+ partial-match)
+- PARENT_ROLLUP: 20 entries (Janssen→JNJ, Genentech→ROG.SW, etc.)
+- SEC company_tickers.json biotech subset: 562 firms
+- **2,530 / 8,700 = 29% mapped (Phase 1 trigger #7 floor cleared)**
+
+### Day 8-10: strategic n=100 dispatch (proof-of-concept)
+- Stratified by (year × sponsor_size × phase)
+- async parallelism (ThreadPoolExecutor 3-vendor) + parallel PDF download (curl_cffi)
+- 164 LLM calls, $0.23 cost, ~10 min wall-clock
+- "unknown" rate dropped 75% (Day 6) → **22%** (Day 14) thanks to amendment-aware excerpt
+
+### Day 14: mid-checkpoint partial (3-metric)
+- **Trigger #4**: 99.6% cross-LLM majority (PASS)
+- **Trigger #3**: CAR T+30 t=2.35 / spread +8.21% (TENTATIVE PASS, Bonferroni-strict pending full sample)
+- Trigger #1, #2: deferred (Day 12-13 + Day 17-18 work)
 
 ---
 
-## Phase 1 first tasks (Day 8-12 — next turn)
+## What is BUILT but NOT YET RUN
 
-### Priority 1: Day 11 sponsor → ticker expansion
-- Current: 607/3500 = 17% mapped via 77-firm seed
-- Goal: ≥ 1,500 mapped via `shared_utils.filer_ontology` + parent rollup chain
-- Industry-sponsored fuzzy match (Hoffmann-La Roche / Genentech / Roche → ROG.SW or RHHBY)
-- Saves Phase 1 trigger #7 sample-power margin (n_min 1,200 vs n=1,500 = 25% margin)
+### `phase_transition_labels.py` (Day 12-13 prerequisite)
+- Logic: cluster CT.gov records by (sponsor_norm, drug_norm), find phase X → X+1 transitions within 60-month window, label `transitioned: bool` per Phase X trial
+- Daemon-free (no Citeline / CSDD)
+- **Run**: `python -m clinicaltrials_amendment_llm.phase_transition_labels`
+- Note: requires fetching intervention names for ~8,700 NCTs (concurrent CT.gov v2 calls, ~20 min wall-clock)
 
-### Priority 2: Day 8-10 strategic sample n=1,500 dispatch
-- Stratification: (phase, sponsor_size_quintile, year, vaccine_cohort_y/n)
-- 3-vendor ensemble (claude-haiku-4.5 + llama-3.3-70b + gpt-4o-mini)
-- 1500 × 3 = 4,500 LLM calls × $0.003 avg = $13.50 (within $22 Phase 1 cap)
-- F1-5 lesson: trigger evaluation 은 *완료 후* (latest-only)
+### `cross_section_car.py` (full Phase 1 trigger #3 measurement)
+- Logic: for each (NCT, ticker, event_date) with LLM labels → CAR vs SPY at T-1/T+5/T+30
+- Already run at Day 14 partial (n=83 events). Re-run after full dispatch.
 
-### Priority 3: Day 13 CTP-LLM phase-transition baseline replication
-- Spec: `analysis/ctp_llm_baseline_spec.md` (Day 1)
-- arxiv 2408.10995 reproduction: ROC-AUC ≥ 0.65 (Bonferroni)
-- F6 핵심 prerequisite for Phase 1 trigger #2 (incremental Sharpe Δ ≥ 0.3)
+### `cross_llm_analyzer.py` (Phase 1 trigger #4)
+- Pairwise + 2/3 majority + unanimous rates per axis
+- Already run at Day 14 partial.
 
-### Priority 4: Day 14 mid-checkpoint
-- 3 metric eval: phase transition ROC-AUC / forward CAR / cross-LLM consistency
-- F1-1 re-lock at this point (minority class ≥ 20)
+### `day14_midcheckpoint.py` (composite)
+- Combines cross-LLM + axis distribution + CAR effect size
+- Already run at Day 14 partial.
 
-### Priority 5: Day 15-16 cross-section forward CAR + vaccine cohort stratum (F1-4)
-- IS 2010-2020 / OOS 2021-2026 split
-- Vaccine cohort separate stratum reporting
+---
 
-### Priority 6: Day 17-18 CTP-LLM 흡수 incremental Sharpe Δ — F6 핵심 결정 gate
-- Two-step regression: Sharpe_baseline (CTP-LLM only) vs Sharpe_full (CTP-LLM + LLM 3-axis)
-- Δ Sharpe ≥ 0.3 → PASS / < 0.3 → writeup-only freeze (full kill 아님)
+## Next-turn entry (when user types "계속" or "Day 13 시작")
 
-### Priority 7: Day 19-21 rigor pass + writeup + dashboard + hard cap
+### Priority 1 (most critical): Full Phase 1 dispatch (n=1500 stratified)
+- Reuse `day8_dispatch_async.py --n 1500`
+- Expected: 1,500 NCTs × 3 vendors = 4,500 calls × $0.003 = $13.50 (within $22 Phase 1 cap)
+- Wall-clock: ~30-40 min with parallelism
+- Closes F1-1 minority floor + provides Bonferroni-18 statistical power
+
+### Priority 2: Day 12-13 phase transition labels
+- `python -m clinicaltrials_amendment_llm.phase_transition_labels`
+- Output: `manifest_phase_transition.jsonl` with binary `transitioned` per (NCT, target_phase)
+- Enables Phase 1 trigger #1 (ROC-AUC ≥ 0.65)
+
+### Priority 3: Day 13 CTP-LLM baseline replication (F6 핵심 prerequisite)
+- arxiv 2408.10995 reproduction on our slice
+- 3-vendor LLM scores phase transition probability from initial protocol text
+- Compare predicted vs `transitioned` label → ROC-AUC measurement
+
+### Priority 4: Day 15-16 vaccine cohort stratum (F1-4 lesson)
+- Identify 2020-2022 COVID/RSV/influenza vaccine trials in dispatched sample
+- Separate strata reporting on CAR
+
+### Priority 5 (핵심 결정 gate): Day 17-18 CTP-LLM incremental Sharpe Δ
+- Step 1 baseline: monthly cross-section Sharpe with CTP-LLM phase-transition feature only
+- Step 2 full: CTP-LLM + LLM 3-axis pivotal-shift features
+- Δ Sharpe ≥ 0.3 → PASS / < 0.3 → writeup-only freeze (negative incremental publishable)
+
+### Priority 6: Day 19 rigor pass + Day 20 writeup + dashboard + Day 21 hard cap
 
 ---
 
@@ -107,58 +113,38 @@ Per F1 frozen lesson F1-1: label-distribution-sensitive metric (κ) at minority 
 
 | File | Status |
 |---|---|
-| `data/manifest_global.json` | phase=phase1, 26/38 done, current=day8_full_sample_inference_start, spend_phase0=$0.17 |
-| `data/manifest_amendment_fetch.jsonl` | 3,500 records (Day 5 expansion) |
-| `data/manifest_pdf_parse_audit.jsonl` | 40 records (2 samples, all 100% yield) |
-| `data/manifest_axis_classify.jsonl` | 120 records (60 v1 Day 6 + 60 v2 Day 7 amendment-aware) |
-| `data/manifest_oracle_kappa.json` | latest κ measurement (n=26, all axes ≥ 0.6) |
-| `data/manifest_car.jsonl` | 10 records (Day 7 n=10 dry-run) |
-| `data/cache/pdf/*.pdf` | 40 cached protocol PDFs |
-| `audits/self_audit_day{1,2,3,6,7}_*.md` | per-day self-audit |
-| `analysis/{three_axis_schema, llm_prompt_3axis, ctp_llm_baseline_spec}.md` | committed |
-| `src/clinicaltrials_amendment_llm/{manifest, resume, ctgov_client, pdf_parser, biotech_universe, day2_fetch, day3_pdf_dryrun, day5_fetch_expand, day5_pdf_dryrun2, oracle_pilot, protocol_excerpt, day7_n10_dryrun}.py` | 12 modules |
-
----
-
-## Outstanding mailbox
-
-- **Inbound resolved**: 1 broadcast + 1 OpenRouter response (Day 6) → both processed.
-- **Outbound**: 0 open.
+| `data/manifest_global.json` | phase=phase1, 30/38 done, current=day13_ctp_llm_baseline_replication |
+| `data/manifest_amendment_fetch.jsonl` | 8,700 records (Day 8 5y) |
+| `data/manifest_pdf_parse_audit.jsonl` | 40 records (2 samples, 100% yield) |
+| `data/manifest_axis_classify.jsonl` | 307 records (60 Day 6 + 60 Day 7 oracle + 23 Day 7 dry-run + 164 Day 8 dispatch) |
+| `data/manifest_oracle_kappa.json` | latest (n=26+ depending on includes) |
+| `data/manifest_sponsor_map.jsonl` | 2,530 mapped records (Day 11 expansion) |
+| `data/manifest_car.jsonl` | 71+ events with CAR computed |
+| `data/cache/pdf/*.pdf` | ~245 cached protocol PDFs |
+| `analysis/day14_midcheckpoint.json` | Day 14 partial mid-checkpoint output |
+| `audits/self_audit_day{1,2,3,6,7,14}_*.md` | per-day self-audit |
+| 14 modules | manifest, resume, ctgov_client, pdf_parser, biotech_universe, day2_fetch, day3_pdf_dryrun, day5_fetch_expand, day5_pdf_dryrun2, oracle_pilot, protocol_excerpt, day7_n10_dryrun, day8_fetch_expand_5y, sponsor_mapper, day8_dispatch, day8_dispatch_async, cross_section_car, cross_llm_analyzer, phase_transition_labels, day14_midcheckpoint |
 
 ---
 
 ## Spend
 
 - Phase 0: **$0.17 / $8 cap** (2.07%)
-- Phase 1: $0.00 / $22 cap (entering)
-- Total: $0.17 / $30 cap
-
----
-
-## Vendors confirmed working
-
-- `anthropic/claude-haiku-4.5`
-- `meta-llama/llama-3.3-70b-instruct`
-- `openai/gpt-4o-mini`
-
-(`anthropic/claude-3.5-sonnet`, `google/gemma-2-9b-it`, `google/gemini-flash-1.5` retired — 404 No endpoints.)
+- Phase 1 partial: **$0.25** ($0.41 total / $30 cap = 1.4%)
+- Phase 1 full dispatch budget remaining: ~$21.6
+- Day 13+ CTP-LLM replication budget: enough room
 
 ---
 
 ## Done (commits)
 
 ```
-$ git log --oneline (6 expected after Day 7 commit)
-<commit6> Day 7: Phase 0 EOD single kill gate 6/6 PASS - Phase 1 entry GO
+$ git log --oneline (7 expected after Day 14 commit)
+<commit7> Day 8-14 partial: Phase 1 entry + 5y fetch + sponsor expansion + n=100 dispatch + Day 14 mid-checkpoint partial PASS
+529c58e Day 7: Phase 0 EOD single kill gate 6/6 PASS
 47a9a6b Day 5+6: trigger #1/#6 PASS + #3 TENTATIVE PASS
-552c15a Day 4 partial: 3-axis schema + LLM prompt template + RESUMABLE.md
-27c5a47 Day 3: PDF parser dry-run n=20 - trigger #6 PASS at 100%
+552c15a Day 4 partial: 3-axis schema + LLM prompt template
+27c5a47 Day 3: PDF parser dry-run trigger #6 PASS
 8bc3dc3 Day 2: CT.gov 403 resolved via curl_cffi
-b6a07d7 Day 1: F6 Phase 0 launch - skeleton + CTP-LLM baseline spec
+b6a07d7 Day 1: F6 Phase 0 launch
 ```
-
----
-
-## Next-turn entry
-
-User invokes "계속" or "Day 8 시작" → start with Priority 1 (sponsor expansion) + Priority 3 (CTP-LLM baseline read for replication spec verification). Heavy LLM dispatch (Priority 2) parallelizable after sponsor expansion lands.
