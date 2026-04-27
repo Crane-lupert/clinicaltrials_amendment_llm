@@ -1,0 +1,173 @@
+"""Day 13 dispatch v2 — optimized parallelism (user directive 2026-04-28).
+
+Optimizations vs day8_dispatch_async:
+1. PDF download concurrency 8 → 24 (I/O-bound, can push higher).
+2. Eager future submission (no generator-based as_completed).
+3. PDF download in *separate phase* before LLM calls (full parallelism on each).
+4. Bigger n target (eager full dispatch on cached + new download).
+5. Print progress every 50 (not 25) to reduce log volume.
+
+Run: `python -m clinicaltrials_amendment_llm.day13_dispatch_v2 [--n N]`
+"""
+
+from __future__ import annotations
+
+import argparse
+import hashlib
+import json
+import time
+from concurrent.futures import ThreadPoolExecutor, as_completed
+from datetime import datetime, timezone
+from pathlib import Path
+
+from dotenv import load_dotenv
+
+load_dotenv("D:/vscode/portfolio-coordination/.env")
+
+from curl_cffi import requests as cr
+
+from clinicaltrials_amendment_llm.day3_pdf_dryrun import _pdf_url
+from clinicaltrials_amendment_llm.day8_dispatch import (
+    _existing_dispatch_keys,
+    stratified_sample,
+)
+from clinicaltrials_amendment_llm.day8_dispatch_async import dispatch_one_record
+from clinicaltrials_amendment_llm.manifest import (
+    DATA_DIR,
+    MANIFEST_AXIS_CLASSIFY,
+    append_manifest,
+    ensure_data_dir,
+)
+from clinicaltrials_amendment_llm.oracle_pilot import (
+    SYSTEM_PROMPT,
+    VENDORS,
+    _build_user_prompt,
+)
+from clinicaltrials_amendment_llm.pdf_parser import parse_pdf
+from clinicaltrials_amendment_llm.protocol_excerpt import extract as extract_excerpt
+from shared_utils.openrouter_client import OpenRouterClient
+
+
+PDF_CACHE_DIR = DATA_DIR / "cache" / "pdf"
+
+
+def _download_pdfs_eager(ncts: list[str], filename: str = "Prot_000.pdf",
+                          max_workers: int = 24) -> dict[str, Path]:
+    """Eager-submit all download futures, then collect via as_completed."""
+    PDF_CACHE_DIR.mkdir(parents=True, exist_ok=True)
+
+    # Pre-filter: cached vs needed
+    needed = []
+    cached_map: dict[str, Path] = {}
+    for nct in ncts:
+        existing = list(PDF_CACHE_DIR.glob(f"{nct}_Prot_*.pdf"))
+        if existing:
+            cached_map[nct] = existing[0]
+        else:
+            needed.append(nct)
+
+    print(f"  PDFs cached: {len(cached_map)}, need download: {len(needed)}", flush=True)
+    if not needed:
+        return cached_map
+
+    def download_one(nct: str) -> tuple[str, Path | None]:
+        url = _pdf_url(nct, filename)
+        out = PDF_CACHE_DIR / f"{nct}_{filename}"
+        try:
+            r = cr.get(url, impersonate="chrome", timeout=60.0)
+            if r.status_code != 200:
+                return nct, None
+            out.write_bytes(r.content)
+            return nct, out
+        except Exception:
+            return nct, None
+
+    t_start = time.time()
+    n_completed = 0
+    n_failed = 0
+    with ThreadPoolExecutor(max_workers=max_workers) as ex:
+        futures = [ex.submit(download_one, n) for n in needed]
+        print(f"  submitted {len(futures)} download futures (concurrency={max_workers})", flush=True)
+        for fut in as_completed(futures):
+            nct, path = fut.result()
+            n_completed += 1
+            if path:
+                cached_map[nct] = path
+            else:
+                n_failed += 1
+            if n_completed % 100 == 0:
+                rate = n_completed / max(time.time() - t_start, 1e-6)
+                print(f"  download progress: {n_completed}/{len(needed)} ({rate:.1f}/s, {n_failed} failed)", flush=True)
+    elapsed = time.time() - t_start
+    print(f"  PDFs downloaded: {len(cached_map) - len([nct for nct in needed if nct in cached_map])} new in {elapsed:.1f}s", flush=True)
+    return cached_map
+
+
+def dispatch(target_n: int = 800) -> dict:
+    ensure_data_dir()
+    sample = stratified_sample(target_n)
+    print(f"Stratified sample: {len(sample)}", flush=True)
+    if not sample:
+        return {"error": "empty pool"}
+
+    ncts = [r["nct_id"] for r in sample]
+    pdf_paths = _download_pdfs_eager(ncts)
+
+    seen_keys = _existing_dispatch_keys()
+    client = OpenRouterClient(project="F6")
+    n_calls = 0
+    n_skipped = 0
+    total_cost = 0.0
+    t_start = time.time()
+
+    for i, r in enumerate(sample):
+        nct = r["nct_id"]
+        path = pdf_paths.get(nct)
+        if not path:
+            continue
+        pr = parse_pdf(path)
+        if not pr.text:
+            continue
+        excerpt, source = extract_excerpt(pr.text)
+        meta = {
+            "nct_id": nct,
+            "sponsor_name": r.get("sponsor_name"),
+            "sponsor_class": r.get("sponsor_class"),
+            "phase": r.get("phase"),
+            "study_first_submit_date": r.get("study_first_submit_date"),
+            "last_update_post_date": r.get("last_update_post_date"),
+        }
+        user_prompt = _build_user_prompt(meta, excerpt, source)
+        prompt_hash = hashlib.sha256(user_prompt.encode()).hexdigest()[:12]
+        full_prompt = f"{SYSTEM_PROMPT}\n\n{user_prompt}"
+
+        already = {v for v in VENDORS if (nct, v, prompt_hash) in seen_keys}
+        n_skipped += len(already)
+        if len(already) < len(VENDORS):
+            recs = dispatch_one_record(client, nct, meta, full_prompt, prompt_hash, r.get("ticker"), r.get("stratum", ()))
+            for rec in recs:
+                if rec.get("vendor") not in already:
+                    n_calls += 1
+                    total_cost += float(rec.get("cost_usd", 0.0) or 0.0)
+
+        if (i + 1) % 50 == 0:
+            elapsed = time.time() - t_start
+            rate = n_calls / max(elapsed, 1e-6)
+            print(f"  LLM progress: {i+1}/{len(sample)} NCTs, {n_calls} calls, ${total_cost:.4f}, {rate:.1f} calls/s", flush=True)
+
+    return {
+        "n_sample": len(sample),
+        "n_pdfs": len(pdf_paths),
+        "n_calls": n_calls,
+        "n_skipped_existing": n_skipped,
+        "total_cost_usd": round(total_cost, 4),
+        "wall_clock_sec": round(time.time() - t_start, 1),
+    }
+
+
+if __name__ == "__main__":
+    p = argparse.ArgumentParser()
+    p.add_argument("--n", type=int, default=800)
+    args = p.parse_args()
+    summary = dispatch(target_n=args.n)
+    print(json.dumps(summary, indent=2), flush=True)

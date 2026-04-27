@@ -1,0 +1,41 @@
+{
+  "computed_at": "2026-04-27T20:49:46.584446+00:00",
+  "n_events_regression": 80,
+  "minority_class_count": 21,
+  "f1_1_lock_safe": true,
+  "tentative": false,
+  "metrics": {
+    "cross_llm_majority_rate": 0.9929,
+    "car_welch_t_30": 4.371,
+    "car_bonferroni_critical": 2.99,
+    "incremental_partial_alpha_t": 0.958,
+    "incremental_bonferroni_critical": 2.99,
+    "incremental_delta_sharpe": 0.3414,
+    "pivotal_only_sharpe": 1.0883,
+    "by_pivotal_count": {
+      "negative": 21,
+      "neutral": 106,
+      "positive": 96,
+      "unknown": 225
+    }
+  },
+  "triggers": {
+    "trigger4_cross_llm_majority": true,
+    "trigger3_car_uncorrected": true,
+    "trigger3_car_bonferroni_18": true,
+    "trigger2_partial_alpha_uncorrected": false,
+    "trigger2_partial_alpha_bonferroni": false,
+    "trigger2_delta_sharpe_03": true,
+    "f1_1_lock_safe": true
+  },
+  "candidate_layers": {
+    "A_hard_triggers": true,
+    "Hybrid_A+D": false,
+    "D": false,
+    "C": false,
+    "tentative_caveat": false
+  },
+  "decision": "A",
+  "decision_reason": "All hard triggers PASS Bonferroni-strict (cross-LLM True, CAR-Bonf True, Δ Sharpe True OR partial-α-Bonf False). F1-1 lock-safe.",
+  "next_action": "Day 19-20: SSRN paper draft + Streamlit dashboard + Day 21 hard cap"
+}

@@ -1,6 +1,6 @@
 {
   "phase": "phase1",
-  "current_task": "day13_ctp_llm_baseline_replication",
+  "current_task": null,
   "done": [
     "day1_git_init",
     "day1_pyproject_skeleton",
@@ -35,9 +35,13 @@
     "day15_cross_section_car",
     "day17_ctp_llm_incremental_sharpe",
     "day18_self_audit_trigger2",
-    "day19_rigor_pass"
+    "day19_rigor_pass",
+    "day13_ctp_llm_baseline_replication",
+    "day16_vaccine_cohort_stratum",
+    "day20_writeup_dashboard",
+    "day21_phase1_hard_cap"
   ],
-  "last_synced": "2026-04-27T10:28:31.938391+00:00",
+  "last_synced": "2026-04-27T20:50:47.809316+00:00",
   "spend_phase0": 0.1657,
-  "spend_phase1": 0.2584
+  "spend_phase1": 0.3011
 }

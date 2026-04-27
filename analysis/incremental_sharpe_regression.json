@@ -1,0 +1,65 @@
+{
+  "computed_at": "2026-04-27T20:49:46.518553+00:00",
+  "n_events_in_regression": 80,
+  "horizon": "t_0_to_30",
+  "regression_full_model": {
+    "betas": [
+      -0.09716,
+      0.026064,
+      0.036943
+    ],
+    "se": [
+      0.102859,
+      0.041002,
+      0.038561
+    ],
+    "t_stats": [
+      -0.9446,
+      0.6357,
+      0.958
+    ],
+    "sigma": 0.1642
+  },
+  "beta_pivotal": 0.036943,
+  "se_pivotal": 0.038561,
+  "t_pivotal": 0.958,
+  "regression_phase_only": {
+    "beta_phase": 0.023827,
+    "t_phase": 0.5824
+  },
+  "regression_pivotal_only": {
+    "beta_pivotal": 0.035547,
+    "t_pivotal_only": 0.9269
+  },
+  "bonferroni_K_planned": 18,
+  "bonferroni_critical_t": 2.99,
+  "trigger2_partial_alpha_pass_uncorrected": false,
+  "trigger2_partial_alpha_pass_bonferroni": false,
+  "portfolio_baseline_phase_only": {
+    "n_total": 80,
+    "n_long": 26,
+    "n_short": 26,
+    "sharpe": 0.1936,
+    "long_mean_car": -0.0056,
+    "short_mean_car": -0.0151
+  },
+  "portfolio_full_regression_fitted": {
+    "n_total": 80,
+    "n_long": 26,
+    "n_short": 26,
+    "sharpe": 0.535,
+    "long_mean_car": 0.0065,
+    "short_mean_car": -0.0183
+  },
+  "portfolio_pivotal_only": {
+    "n_total": 80,
+    "n_long": 26,
+    "n_short": 26,
+    "sharpe": 1.0883,
+    "long_mean_car": -0.0242,
+    "short_mean_car": -0.0635
+  },
+  "delta_sharpe_full_minus_baseline": 0.3414,
+  "trigger2_delta_sharpe_pass": true,
+  "interpretation": "Proper partial-α via OLS: β2 t-stat tests whether pivotal_shift adds incremental CAR-predictive power AFTER controlling for phase. |t| ≥ 2.0 (Bonferroni-K) → trigger #2 PASS at signal-existence level. Δ Sharpe (regression-fitted weights vs phase-only) = portfolio-level incremental contribution. Both metrics needed for confident PASS."
+}
