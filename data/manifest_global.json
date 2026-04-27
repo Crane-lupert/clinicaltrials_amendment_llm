@@ -1,0 +1,19 @@
+{
+  "phase": "phase0",
+  "current_task": "day2_biotech_universe_filter",
+  "done": [
+    "day1_git_init",
+    "day1_pyproject_skeleton",
+    "day1_manifest_resume_skeleton",
+    "day1_ctgov_client_skeleton",
+    "day1_pdf_parser_skeleton",
+    "day1_ctp_llm_baseline_spec",
+    "day1_arxiv_scoop_check",
+    "day1_openrouter_register",
+    "day1_daily_checkpoint",
+    "day1_self_audit"
+  ],
+  "last_synced": "2026-04-27T07:36:52.559308+00:00",
+  "spend_phase0": 0.0,
+  "spend_phase1": 0.0
+}

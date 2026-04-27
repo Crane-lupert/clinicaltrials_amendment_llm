@@ -1,0 +1,43 @@
+[project]
+name = "clinicaltrials_amendment_llm"
+version = "0.0.1"
+description = "F6 - ClinicalTrials.gov protocol amendment text x multi-vendor LLM ensemble x 3-axis pivotal-shift classification x biotech firm phase transition + forward CAR. F1 frozen swap fill, daemon-free (Gate F), discovery-form (Gate G). CTP-LLM (arxiv 2408.10995) financial extension."
+requires-python = ">=3.11"
+dependencies = [
+    "httpx[http2]>=0.27",
+    "pyyaml>=6.0",
+    "python-dotenv>=1.0",
+    "filelock>=3.15",
+    "tenacity>=8.2",
+    "pdfplumber>=0.11",
+    "pypdf>=5.0",
+    "yfinance>=0.2.40",
+    "pandas>=2.2",
+    "numpy>=1.26",
+    "scipy>=1.13",
+    "statsmodels>=0.14",
+    "shared-utils @ file:///D:/vscode/portfolio-coordination/shared-utils",
+]
+
+[project.optional-dependencies]
+test = [
+    "pytest>=8.0",
+]
+dashboard = [
+    "streamlit>=1.36",
+    "plotly>=5.22",
+]
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
