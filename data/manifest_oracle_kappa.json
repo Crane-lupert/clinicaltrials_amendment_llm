@@ -1,0 +1,82 @@
+{
+  "per_axis": {
+    "pivotal_shift": {
+      "axis": "pivotal_shift",
+      "n_ncts_full": 20,
+      "categories": [
+        "neutral",
+        "positive",
+        "unknown"
+      ],
+      "p_j": [
+        0.1167,
+        0.1333,
+        0.75
+      ],
+      "P_bar": 0.8333,
+      "P_e": 0.5939,
+      "kappa": 0.5896
+    },
+    "admin_vs_substantive": {
+      "axis": "admin_vs_substantive",
+      "n_ncts_full": 20,
+      "categories": [
+        "substantive",
+        "unknown"
+      ],
+      "p_j": [
+        0.25,
+        0.75
+      ],
+      "P_bar": 0.8667,
+      "P_e": 0.625,
+      "kappa": 0.6444
+    },
+    "driver": {
+      "axis": "driver",
+      "n_ncts_full": 20,
+      "categories": [
+        "regulator",
+        "sponsor",
+        "unknown"
+      ],
+      "p_j": [
+        0.0333,
+        0.2167,
+        0.75
+      ],
+      "P_bar": 0.8667,
+      "P_e": 0.6106,
+      "kappa": 0.6576
+    }
+  },
+  "aggregate_mean_kappa": 0.6305,
+  "fallback_pivotal_binary": {
+    "axis": "pivotal_binary",
+    "n_ncts_full": 20,
+    "categories": [
+      "admin_or_neutral",
+      "substantive_design_change",
+      "unknown"
+    ],
+    "p_j": [
+      0.1167,
+      0.1333,
+      0.75
+    ],
+    "P_bar": 0.8333,
+    "P_e": 0.5939,
+    "kappa": 0.5896
+  },
+  "trigger3_threshold": 0.6,
+  "trigger3_per_axis_pass": false,
+  "trigger3_aggregate_pass": true,
+  "trigger3_fallback_pass": false,
+  "trigger3_overall_pass": false,
+  "f1_1_caveat": {
+    "minority_count_pivotal_shift": 7,
+    "f1_1_minority_floor": 20,
+    "f1_1_lock_safe": false
+  },
+  "computed_at": "2026-04-27T08:49:34.608302+00:00"
+}

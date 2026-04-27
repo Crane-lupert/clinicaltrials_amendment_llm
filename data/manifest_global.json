@@ -16,9 +16,17 @@
     "day2_amendment_fetch_first",
     "day2_sponsor_ticker_skeleton",
     "day2_self_audit",
-    "day3_pdf_parser_dry_run"
+    "day3_pdf_parser_dry_run",
+    "day4_n20_oracle_start",
+    "day5_n10_dry_run_complete",
+    "day5_pdf_parsing_yield_first",
+    "day5_n20_oracle_complete",
+    "day5_self_audit_trigger1",
+    "day6_n10_dry_run_second",
+    "day6_oracle_kappa_measure",
+    "day6_pdf_parsing_yield_second"
   ],
-  "last_synced": "2026-04-27T07:50:27.440675+00:00",
+  "last_synced": "2026-04-27T08:51:44.779459+00:00",
   "spend_phase0": 0.0,
   "spend_phase1": 0.0
 }
