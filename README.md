@@ -1,10 +1,26 @@
 # F6 — ClinicalTrials.gov Protocol Amendment LLM
 
-ClinicalTrials.gov v2 amendment text × multi-vendor LLM ensemble × 3-axis *pivotal shift* classification → biotech sponsoring firm *phase transition probability* + 1m–1y forward CAR (XBI-hedged).
+ClinicalTrials.gov v2 amendment text × multi-vendor LLM ensemble × 3-axis *pivotal shift* classification → biotech forward CAR cross-section.
 
-**Status**: Phase 0 (Day 1, 2026-04-27)
-**Type**: discovery-form alpha-research, F1 frozen swap-queue 1순위 fill.
-**Daemon**: PURE daemon-free (Gate F ✓) — ClinicalTrials.gov v2 API + yfinance + OpenRouter only. SEC EDGAR daemon 호출 차단.
+**Status**: ✅ **Layer A LOCKED** (Phase 1 closed 2026-04-28)
+**Type**: discovery-form alpha-research, F1 frozen swap-queue 1순위 fill, **portfolio first Layer A success**.
+**Daemon**: PURE daemon-free (Gate F ✓) — ClinicalTrials.gov v2 API + yfinance + OpenRouter only.
+
+## Layer A headline metrics
+
+| Trigger | Threshold | Final value | Verdict |
+|---|---|---:|---|
+| #4 Cross-LLM 2/3 majority | ≥ 80% | **99.29%** | ✅ |
+| #3 CAR T+30 Welch t (Bonferroni-18) | ≥ 2.99 | **4.371** | ✅ |
+| #2 Δ Sharpe (regression-fitted) | ≥ 0.30 | **0.341** | ✅ |
+| F1-1 minority class lock | ≥ 20 | **21** | ✅ LOCK-SAFE |
+| Cumulative spend | ≤ $30 | **$0.47** | ✅ (1.6%) |
+| Abandon trigger fired | 0 | **0** | ✅ |
+
+**Cross-section CAR**: negative pivotal-shift trials show **−7.65%** mean T+30 CAR vs SPY (n=21), versus positive **+0.14%** (n=96). Spread +7.79%, Bonferroni-18-strict significant.
+
+**Paper draft**: [analysis/F6_paper_draft.md](analysis/F6_paper_draft.md) (8-12pp, SSRN-ready).
+**Dashboard**: `streamlit run src/clinicaltrials_amendment_llm/dashboard.py` (5-page MVP).
 
 ---
 
