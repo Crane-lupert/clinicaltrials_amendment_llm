@@ -27,7 +27,8 @@ from curl_cffi import requests as curl_requests
 from tenacity import retry, stop_after_attempt, wait_exponential
 
 API_V2_BASE = "https://clinicaltrials.gov/api/v2"
-ALLOWED_HOSTS = {"clinicaltrials.gov", "www.clinicaltrials.gov"}
+PROTOCOL_DOC_BASE = "https://cdn.clinicaltrials.gov/large-docs"
+ALLOWED_HOSTS = {"clinicaltrials.gov", "www.clinicaltrials.gov", "cdn.clinicaltrials.gov"}
 IMPERSONATE = "chrome"  # curl_cffi TLS fingerprint
 DEFAULT_TIMEOUT = 30.0
 DEFAULT_CONCURRENCY = 8

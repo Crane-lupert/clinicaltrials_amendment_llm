@@ -1,6 +1,6 @@
 {
   "phase": "phase0",
-  "current_task": "day3_pdf_parser_dry_run",
+  "current_task": "day4_n10_dry_run_start",
   "done": [
     "day1_git_init",
     "day1_pyproject_skeleton",
@@ -15,9 +15,10 @@
     "day2_biotech_universe_filter",
     "day2_amendment_fetch_first",
     "day2_sponsor_ticker_skeleton",
-    "day2_self_audit"
+    "day2_self_audit",
+    "day3_pdf_parser_dry_run"
   ],
-  "last_synced": "2026-04-27T07:44:13.681788+00:00",
+  "last_synced": "2026-04-27T07:50:27.440675+00:00",
   "spend_phase0": 0.0,
   "spend_phase1": 0.0
 }
