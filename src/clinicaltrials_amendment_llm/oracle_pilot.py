@@ -44,6 +44,7 @@ from clinicaltrials_amendment_llm.manifest import (
     read_manifest,
 )
 from clinicaltrials_amendment_llm.pdf_parser import parse_pdf
+from clinicaltrials_amendment_llm.protocol_excerpt import extract as extract_excerpt
 from shared_utils.atomic_io import atomic_write_json
 from shared_utils.openrouter_client import OpenRouterClient
 
@@ -60,7 +61,10 @@ VENDORS: list[str] = [
     "openai/gpt-4o-mini",
 ]
 
-PROTOCOL_EXCERPT_CHARS = 4000  # truncate protocol text to control tokens
+# Day 7 (2026-04-27) revision: replaced fixed first-4000-chars excerpt with the
+# amendment-aware extractor in protocol_excerpt.py. The extractor searches for
+# Document/Amendment/Revision History headers and returns surrounding ~8000 chars.
+# Falls back to first 8000 chars (still 2x the Day 6 budget) when no header found.
 
 SYSTEM_PROMPT = (
     "You are a clinical-trial protocol-amendment analyst. Your task is to classify "
@@ -71,14 +75,15 @@ SYSTEM_PROMPT = (
 )
 
 
-def _build_user_prompt(meta: dict, protocol_excerpt: str) -> str:
+def _build_user_prompt(meta: dict, protocol_excerpt: str, excerpt_source: str) -> str:
     return f"""[NCT_ID]: {meta.get('nct_id')}
 [SPONSOR]: {meta.get('sponsor_name')}  (class: {meta.get('sponsor_class')})
 [PHASE]: {meta.get('phase')}
 [FIRST_SUBMITTED]: {meta.get('study_first_submit_date')}
 [LAST_UPDATE_POST]: {meta.get('last_update_post_date')}
+[EXCERPT_SOURCE]: {excerpt_source}  (history_section = found Document/Amendment History header; prefix = first chars of protocol)
 
-[PROTOCOL_TEXT]:
+[PROTOCOL_EXCERPT]:
 {protocol_excerpt}
 
 Classify the most recent amendment on three axes per the F6 schema:
@@ -128,14 +133,19 @@ def _request_id(nct: str, vendor: str, prompt_hash: str) -> str:
     return hashlib.sha256(f"{nct}|{vendor}|{prompt_hash}".encode()).hexdigest()[:16]
 
 
-def _existing_results() -> set[tuple[str, str]]:
-    """Return set of (nct_id, vendor) already in manifest_axis_classify."""
-    seen: set[tuple[str, str]] = set()
+def _existing_results() -> set[tuple[str, str, str]]:
+    """Return set of (nct_id, vendor, prompt_hash) already in manifest_axis_classify.
+
+    Day 7 fix: dedup by prompt_hash too, so prompt-revision (Day 7
+    amendment-aware excerpt) re-calls vendors instead of silently skipping.
+    """
+    seen: set[tuple[str, str, str]] = set()
     for r in read_manifest(MANIFEST_AXIS_CLASSIFY):
         nct = r.get("nct_id")
         vendor = r.get("vendor")
+        ph = r.get("prompt_hash") or ""
         if nct and vendor:
-            seen.add((nct, vendor))
+            seen.add((nct, vendor, ph))
     return seen
 
 
@@ -201,19 +211,19 @@ def run_oracle(target_n: int = 20) -> dict:
             print(f"  {nct}: SKIP (no metadata)")
             continue
 
-        # Read PDF text once
+        # Read PDF text once + amendment-aware excerpt
         pr = parse_pdf(nct_to_path[nct])
-        excerpt = pr.text[:PROTOCOL_EXCERPT_CHARS] if pr.text else ""
+        excerpt, excerpt_source = extract_excerpt(pr.text or "")
         if not excerpt:
             print(f"  {nct}: SKIP (no protocol text)")
             continue
 
-        user_prompt = _build_user_prompt(meta, excerpt)
+        user_prompt = _build_user_prompt(meta, excerpt, excerpt_source)
         prompt_hash = hashlib.sha256(user_prompt.encode()).hexdigest()[:12]
         full_prompt = f"{SYSTEM_PROMPT}\n\n{user_prompt}"
 
         for vendor in VENDORS:
-            if (nct, vendor) in seen_pairs:
+            if (nct, vendor, prompt_hash) in seen_pairs:
                 n_skipped += 1
                 continue
             req_id = _request_id(nct, vendor, prompt_hash)
@@ -252,7 +262,7 @@ def run_oracle(target_n: int = 20) -> dict:
                 n_errors += 1
                 print(f"  {nct} x {vendor}: ERROR {type(e).__name__}: {str(e)[:150]}")
                 continue
-        if (nct, VENDORS[0]) not in seen_pairs:
+        if (nct, VENDORS[0], prompt_hash) not in seen_pairs:
             print(f"  {nct}: 3 vendors done (cost so far ${total_cost:.4f})")
 
     return {
@@ -264,17 +274,30 @@ def run_oracle(target_n: int = 20) -> dict:
     }
 
 
-def compute_fleiss_kappa(axis: str) -> dict:
-    """Fleiss kappa for one axis across 3 vendors."""
-    # Group by NCT
-    by_nct: dict[str, dict[str, str]] = {}
+def compute_fleiss_kappa(axis: str, latest_only: bool = True) -> dict:
+    """Fleiss kappa for one axis across 3 vendors.
+
+    latest_only: when multiple prompt_hash exist for a (nct, vendor) pair
+    (Day 7 amendment-aware excerpt re-run), use only the most recent record.
+    """
+    # Group by (nct, vendor) -> list of records sorted by called_at
+    grouped: dict[tuple[str, str], list[dict]] = {}
     for r in read_manifest(MANIFEST_AXIS_CLASSIFY):
         nct = r.get("nct_id")
         vendor = r.get("vendor")
-        val = r.get(axis)
-        if not nct or not vendor or val is None:
+        if not nct or not vendor:
             continue
-        by_nct.setdefault(nct, {})[vendor] = str(val)
+        grouped.setdefault((nct, vendor), []).append(r)
+
+    by_nct: dict[str, dict[str, str]] = {}
+    for (nct, vendor), records in grouped.items():
+        if latest_only:
+            records = sorted(records, key=lambda x: x.get("called_at", ""))[-1:]
+        for r in records:
+            val = r.get(axis)
+            if val is None:
+                continue
+            by_nct.setdefault(nct, {})[vendor] = str(val)
 
     # Filter to NCTs with all 3 vendors
     ncts_full = [n for n, vs in by_nct.items() if len(vs) >= 3 and all(v in vs for v in VENDORS)]
@@ -343,17 +366,25 @@ def _collapse_to_pivotal_binary(pivotal_shift: str, admin_vs_substantive: str) -
 
 
 def compute_pivotal_binary_kappa() -> dict:
-    """Fleiss kappa on the collapsed pivotal_binary axis."""
-    by_nct: dict[str, dict[str, str]] = {}
+    """Fleiss kappa on the collapsed pivotal_binary axis (latest-only)."""
+    grouped: dict[tuple[str, str], list[dict]] = {}
     for r in read_manifest(MANIFEST_AXIS_CLASSIFY):
         nct = r.get("nct_id")
         vendor = r.get("vendor")
-        ps = r.get("pivotal_shift")
-        avs = r.get("admin_vs_substantive")
-        if not nct or not vendor or ps is None or avs is None:
+        if not nct or not vendor:
             continue
-        binary = _collapse_to_pivotal_binary(str(ps), str(avs))
-        by_nct.setdefault(nct, {})[vendor] = binary
+        grouped.setdefault((nct, vendor), []).append(r)
+
+    by_nct: dict[str, dict[str, str]] = {}
+    for (nct, vendor), records in grouped.items():
+        records = sorted(records, key=lambda x: x.get("called_at", ""))[-1:]
+        for r in records:
+            ps = r.get("pivotal_shift")
+            avs = r.get("admin_vs_substantive")
+            if ps is None or avs is None:
+                continue
+            binary = _collapse_to_pivotal_binary(str(ps), str(avs))
+            by_nct.setdefault(nct, {})[vendor] = binary
 
     ncts_full = [n for n, vs in by_nct.items() if len(vs) >= 3 and all(v in vs for v in VENDORS)]
     if len(ncts_full) < 5:

@@ -2,81 +2,85 @@
   "per_axis": {
     "pivotal_shift": {
       "axis": "pivotal_shift",
-      "n_ncts_full": 20,
+      "n_ncts_full": 26,
       "categories": [
+        "negative",
         "neutral",
         "positive",
         "unknown"
       ],
       "p_j": [
-        0.1167,
-        0.1333,
-        0.75
+        0.0256,
+        0.2051,
+        0.2436,
+        0.5256
       ],
-      "P_bar": 0.8333,
-      "P_e": 0.5939,
-      "kappa": 0.5896
+      "P_bar": 0.7949,
+      "P_e": 0.3784,
+      "kappa": 0.67
     },
     "admin_vs_substantive": {
       "axis": "admin_vs_substantive",
-      "n_ncts_full": 20,
+      "n_ncts_full": 26,
       "categories": [
+        "admin",
         "substantive",
         "unknown"
       ],
       "p_j": [
-        0.25,
-        0.75
+        0.0641,
+        0.4487,
+        0.4872
       ],
-      "P_bar": 0.8667,
-      "P_e": 0.625,
-      "kappa": 0.6444
+      "P_bar": 0.8205,
+      "P_e": 0.4428,
+      "kappa": 0.6779
     },
     "driver": {
       "axis": "driver",
-      "n_ncts_full": 20,
+      "n_ncts_full": 26,
       "categories": [
         "regulator",
         "sponsor",
         "unknown"
       ],
       "p_j": [
-        0.0333,
-        0.2167,
-        0.75
+        0.0128,
+        0.4872,
+        0.5
       ],
-      "P_bar": 0.8667,
-      "P_e": 0.6106,
-      "kappa": 0.6576
+      "P_bar": 0.8205,
+      "P_e": 0.4875,
+      "kappa": 0.6498
     }
   },
-  "aggregate_mean_kappa": 0.6305,
+  "aggregate_mean_kappa": 0.6659,
   "fallback_pivotal_binary": {
     "axis": "pivotal_binary",
-    "n_ncts_full": 20,
+    "n_ncts_full": 26,
     "categories": [
       "admin_or_neutral",
       "substantive_design_change",
       "unknown"
     ],
     "p_j": [
-      0.1167,
-      0.1333,
-      0.75
+      0.2051,
+      0.2692,
+      0.5256
     ],
-    "P_bar": 0.8333,
-    "P_e": 0.5939,
-    "kappa": 0.5896
+    "P_bar": 0.7949,
+    "P_e": 0.3909,
+    "kappa": 0.6632
   },
   "trigger3_threshold": 0.6,
-  "trigger3_per_axis_pass": false,
+  "trigger3_per_axis_pass": true,
   "trigger3_aggregate_pass": true,
-  "trigger3_fallback_pass": false,
-  "trigger3_overall_pass": false,
+  "trigger3_fallback_pass": true,
+  "trigger3_overall_pass": true,
   "f1_1_caveat": {
-    "minority_count_pivotal_shift": 7,
+    "minority_count_pivotal_shift": 1,
     "f1_1_minority_floor": 20,
     "f1_1_lock_safe": false
   },
-  "computed_at": "2026-04-27T08:49:34.608302+00:00"
+  "computed_at": "2026-04-27T09:13:22.716766+00:00"
 }
