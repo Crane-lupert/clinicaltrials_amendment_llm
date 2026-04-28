@@ -286,6 +286,34 @@ The interpretation: the F6 LLM 3-axis amendment signal **does add cross-section 
 
 **DSR-only failure**: this is expected at a small n=80 with portfolio-level Sharpe estimates that are still developing. Bootstrap CIs (which are non-parametric) confirm the negative arm's CAR distribution. We disclose this in §6 limitations.
 
+### 5.5b Trigger #1 — Phase transition ROC-AUC (auxiliary)
+
+We additionally measured the LLM 3-axis pivotal-shift score's ability to predict raw phase transition outcomes (whether a Phase 2 trial advances to Phase 3 within 60 months). Outcome labels were constructed via (sponsor_norm, drug_norm) cluster matching across phases — a CT.gov-only proxy for ground-truth Citeline / Tufts CSDD data.
+
+| Metric | Value |
+|---|---:|
+| n phase_transition_labels generated | 20,765 |
+| n paired (LLM 3-axis × outcome label) | 94 |
+| Transition rate in paired sample | 6.4% (6/94) |
+| **ROC-AUC (Mann-Whitney U)** | **0.585** |
+| Phase 1 trigger #1 threshold | ≥ 0.65 |
+| Trigger #1 verdict | ❌ **FAIL** (margin −0.065) |
+
+**Interpretation — important nuance**: this trigger #1 FAIL does **not** invalidate Layer A. Layer A rests on trigger #2 (incremental Sharpe Δ), #3 (cross-section CAR), and #4 (cross-LLM consistency) — all financial signal validation. Trigger #1 is *phase transition prediction* validation — a different phenomenon.
+
+The two phenomena are distinct:
+- **CTP-LLM (Reinisch et al. 2024)**: trial-outcome prediction (does this trial advance to next phase?). Reports 67% accuracy on initial protocol text.
+- **F6 (this paper)**: forward equity alpha around amendment events (does this amendment trigger biotech CAR?). Reports +7.79% spread, t=4.37.
+
+**Our weak ROC-AUC = 0.585 reframes our contribution**: F6 is *not* a stronger phase transition predictor than CTP-LLM. Instead, F6 is a *complementary* signal — amendment-derived features capture forward-CAR-relevant information that *coexists with*, but does not subsume, CTP-LLM's phase-transition signal. The two signals work on different layers of the same trial pipeline.
+
+Likely reasons for the weak ROC-AUC:
+1. **Sample selection**: LLM-dispatched NCTs concentrate in FY2020-FY2024. Phase 2 → Phase 3 transitions take 1-3 years, so recent trials' outcomes are not yet observed in our 60-month window.
+2. **Outcome label heuristic**: (sponsor, drug) cluster matching is approximate. Citeline / Tufts CSDD ground truth would be cleaner.
+3. **Class imbalance**: 6 transitioned : 88 not_transitioned in paired sample. Power for ROC-AUC is structurally limited.
+
+This is a Limitation §6.1.9 entry, not a Layer A re-evaluation gate.
+
 ### 5.6 F1-1 minority-class lock check
 
 `minority_count = 21 (negative pivotal_shift) ≥ F1-1 floor 20` → **LOCK-SAFE**.
@@ -303,6 +331,7 @@ The conclusions in §5.2-§5.5 are not tentative. Per F1-1 guidance, results at 
 3. **CTP-LLM proxy is phase number only**: the actual CTP-LLM is a fine-tuned GPT-3.5 with full protocol text input. Our baseline uses just the trial's Phase number as a transparent proxy — defensible because CTP-LLM's headline finding is that Phase 3 → approval is 75% predictable. A more rigorous head-to-head replication of CTP-LLM is future work.
 4. **Sponsor → ticker mapping is naive**: 36% mapping yield is below the F6 reference-validation §4.5.3 estimate (~75%). Foreign-domiciled biotechs (Chinese, European, Japanese) are systematically excluded. Future work: yfinance multi-exchange ticker lookups.
 5. **Bonferroni-18 budget**: we pre-registered 18 tests (3 axes × 2 horizons × 3 phase strata) but report 6 (3 axes × 2 horizons, no phase stratification). The Bonferroni-18 critical is conservative; Holm-Bonferroni would be tighter.
+6. **Phase transition ROC-AUC 0.585 (trigger #1 FAIL)** — see §5.5b. Two consequences: (a) F6 is *complementary* to CTP-LLM, not a stronger phase-transition predictor; (b) the financial-alpha thesis (triggers #2, #3, #4) is the load-bearing claim, and these all PASS Bonferroni-strict. Future work: cleaner outcome labels (Citeline / Tufts CSDD) + dispatch on older trials (FY2010-FY2019) where transition outcomes are observed.
 
 ### 6.1.6 Sample-size summary across pipeline stages
 

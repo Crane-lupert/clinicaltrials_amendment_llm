@@ -1,4 +1,10 @@
 {
-  "n_pt_records": 0,
-  "error": "phase_transition_labels not yet generated"
+  "n_pt_records": 20765,
+  "n_paired": 94,
+  "n_transitioned": 6,
+  "n_not_transitioned": 88,
+  "transition_rate_in_paired": 0.0638,
+  "roc_auc": 0.5852,
+  "trigger1_threshold": 0.65,
+  "trigger1_pass": false
 }

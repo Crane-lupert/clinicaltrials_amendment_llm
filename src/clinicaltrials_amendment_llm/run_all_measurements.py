@@ -140,7 +140,10 @@ def run_all() -> dict:
     layer = decide_layer()
     atomic_write_json(ANALYSIS_DIR / "F6_layer_decision.json", layer)
     print(f"  DECISION: Layer {layer.get('decision')}", flush=True)
-    print(f"  REASON: {layer.get('decision_reason')}".encode('utf-8', errors='replace').decode('ascii', errors='replace'), flush=True)
+    # Coerce reason to ASCII to avoid Windows cp949 codec failure on em-dash (U+2014)
+    reason = layer.get('decision_reason') or ''
+    safe_reason = reason.encode('ascii', errors='replace').decode('ascii')
+    print(f"  REASON: {safe_reason}", flush=True)
 
     out = {
         "computed_at": datetime.now(tz=timezone.utc).isoformat(),

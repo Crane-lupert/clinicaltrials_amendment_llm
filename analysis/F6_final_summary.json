@@ -1,0 +1,327 @@
+{
+  "computed_at": "2026-04-28T01:37:56.171541+00:00",
+  "measurements": {
+    "cross_section_car": {
+      "n_events": 82,
+      "n_computed": 82,
+      "n_skipped_no_data": 0,
+      "by_pivotal_count": {
+        "negative": 4,
+        "neutral": 20,
+        "positive": 17,
+        "unknown": 41
+      },
+      "by_pivotal_mean_t_5_car": {
+        "negative": -0.0134,
+        "neutral": 0.0062,
+        "positive": 0.0015,
+        "unknown": -0.0019
+      },
+      "by_pivotal_mean_t_30_car": {
+        "negative": -0.0734,
+        "neutral": -0.0365,
+        "positive": 0.0013,
+        "unknown": -0.0294
+      }
+    },
+    "cross_llm": {
+      "n_ncts_full": 95,
+      "per_axis": {
+        "pivotal_shift": {
+          "n": 94,
+          "majority_2of3_rate": 0.9894,
+          "unanimous_rate": 0.734,
+          "non_unknown_majority_rate": 0.3723,
+          "pairwise_agreement": {
+            "anthropic/claude-haiku-4.5__meta-llama/llama-3.3-70b-instruct": 0.8617,
+            "anthropic/claude-haiku-4.5__openai/gpt-4o-mini": 0.7766,
+            "meta-llama/llama-3.3-70b-instruct__openai/gpt-4o-mini": 0.8191
+          }
+        },
+        "admin_vs_substantive": {
+          "n": 94,
+          "majority_2of3_rate": 0.9894,
+          "unanimous_rate": 0.7766,
+          "non_unknown_majority_rate": 0.4255,
+          "pairwise_agreement": {
+            "anthropic/claude-haiku-4.5__meta-llama/llama-3.3-70b-instruct": 0.8404,
+            "anthropic/claude-haiku-4.5__openai/gpt-4o-mini": 0.8191,
+            "meta-llama/llama-3.3-70b-instruct__openai/gpt-4o-mini": 0.883
+          }
+        },
+        "driver": {
+          "n": 94,
+          "majority_2of3_rate": 1.0,
+          "unanimous_rate": 0.7447,
+          "non_unknown_majority_rate": 0.4149,
+          "pairwise_agreement": {
+            "anthropic/claude-haiku-4.5__meta-llama/llama-3.3-70b-instruct": 0.8404,
+            "anthropic/claude-haiku-4.5__openai/gpt-4o-mini": 0.7979,
+            "meta-llama/llama-3.3-70b-instruct__openai/gpt-4o-mini": 0.8511
+          }
+        }
+      },
+      "overall_majority_2of3_rate": 0.9929,
+      "trigger4_threshold": 0.8,
+      "trigger4_pass": true,
+      "computed_at": "2026-04-28T01:37:55.800086+00:00"
+    },
+    "midcheckpoint": {
+      "computed_at": "2026-04-28T01:37:55.824660+00:00",
+      "cross_llm": {
+        "n_ncts_full": 95,
+        "per_axis": {
+          "pivotal_shift": {
+            "n": 94,
+            "majority_2of3_rate": 0.9894,
+            "unanimous_rate": 0.734,
+            "non_unknown_majority_rate": 0.3723,
+            "pairwise_agreement": {
+              "anthropic/claude-haiku-4.5__meta-llama/llama-3.3-70b-instruct": 0.8617,
+              "anthropic/claude-haiku-4.5__openai/gpt-4o-mini": 0.7766,
+              "meta-llama/llama-3.3-70b-instruct__openai/gpt-4o-mini": 0.8191
+            }
+          },
+          "admin_vs_substantive": {
+            "n": 94,
+            "majority_2of3_rate": 0.9894,
+            "unanimous_rate": 0.7766,
+            "non_unknown_majority_rate": 0.4255,
+            "pairwise_agreement": {
+              "anthropic/claude-haiku-4.5__meta-llama/llama-3.3-70b-instruct": 0.8404,
+              "anthropic/claude-haiku-4.5__openai/gpt-4o-mini": 0.8191,
+              "meta-llama/llama-3.3-70b-instruct__openai/gpt-4o-mini": 0.883
+            }
+          },
+          "driver": {
+            "n": 94,
+            "majority_2of3_rate": 1.0,
+            "unanimous_rate": 0.7447,
+            "non_unknown_majority_rate": 0.4149,
+            "pairwise_agreement": {
+              "anthropic/claude-haiku-4.5__meta-llama/llama-3.3-70b-instruct": 0.8404,
+              "anthropic/claude-haiku-4.5__openai/gpt-4o-mini": 0.7979,
+              "meta-llama/llama-3.3-70b-instruct__openai/gpt-4o-mini": 0.8511
+            }
+          }
+        },
+        "overall_majority_2of3_rate": 0.9929,
+        "trigger4_threshold": 0.8,
+        "trigger4_pass": true,
+        "computed_at": "2026-04-28T01:37:55.805189+00:00"
+      },
+      "axis_distribution": {
+        "n_ncts": 95,
+        "pivotal_shift": {
+          "positive": 19,
+          "neutral": 23,
+          "unknown": 49,
+          "negative": 4
+        },
+        "admin_vs_substantive": {
+          "substantive": 48,
+          "admin": 3,
+          "unknown": 44
+        },
+        "driver": {
+          "sponsor": 49,
+          "unknown": 43,
+          "regulator": 3
+        }
+      },
+      "car_effect_size_t_0_to_5": {
+        "horizon": "t_0_to_5",
+        "long_arm": "positive",
+        "short_arm": "negative",
+        "n_long": 119,
+        "n_short": 25,
+        "mean_long_car": 0.0015,
+        "mean_short_car": -0.0095,
+        "spread": 0.011,
+        "welch_t": 2.3632,
+        "trigger3_threshold_t": 2.0,
+        "trigger3_pass": true,
+        "by_pivotal_count": {
+          "negative": 25,
+          "neutral": 126,
+          "positive": 119,
+          "unknown": 272
+        }
+      },
+      "car_effect_size_t_0_to_30": {
+        "horizon": "t_0_to_30",
+        "long_arm": "positive",
+        "short_arm": "negative",
+        "n_long": 112,
+        "n_short": 25,
+        "mean_long_car": 0.0014,
+        "mean_short_car": -0.076,
+        "spread": 0.0774,
+        "welch_t": 4.7474,
+        "trigger3_threshold_t": 2.0,
+        "trigger3_pass": true,
+        "by_pivotal_count": {
+          "negative": 25,
+          "neutral": 126,
+          "positive": 112,
+          "unknown": 265
+        }
+      },
+      "summary": {
+        "n_ncts_with_3_vendor_labels": 95,
+        "n_ncts_total": 95,
+        "trigger4_cross_llm_pass": true,
+        "trigger3_t_5_pass": true,
+        "trigger3_t_30_pass": true
+      }
+    },
+    "incremental_sharpe_regression": {
+      "computed_at": "2026-04-28T01:37:56.004528+00:00",
+      "n_events_in_regression": 80,
+      "horizon": "t_0_to_30",
+      "regression_full_model": {
+        "betas": [
+          -0.09716,
+          0.026064,
+          0.036943
+        ],
+        "se": [
+          0.102859,
+          0.041002,
+          0.038561
+        ],
+        "t_stats": [
+          -0.9446,
+          0.6357,
+          0.958
+        ],
+        "sigma": 0.1642
+      },
+      "beta_pivotal": 0.036943,
+      "se_pivotal": 0.038561,
+      "t_pivotal": 0.958,
+      "regression_phase_only": {
+        "beta_phase": 0.023827,
+        "t_phase": 0.5824
+      },
+      "regression_pivotal_only": {
+        "beta_pivotal": 0.035547,
+        "t_pivotal_only": 0.9269
+      },
+      "bonferroni_K_planned": 18,
+      "bonferroni_critical_t": 2.99,
+      "trigger2_partial_alpha_pass_uncorrected": false,
+      "trigger2_partial_alpha_pass_bonferroni": false,
+      "portfolio_baseline_phase_only": {
+        "n_total": 80,
+        "n_long": 26,
+        "n_short": 26,
+        "sharpe": 0.1936,
+        "long_mean_car": -0.0056,
+        "short_mean_car": -0.0151
+      },
+      "portfolio_full_regression_fitted": {
+        "n_total": 80,
+        "n_long": 26,
+        "n_short": 26,
+        "sharpe": 0.535,
+        "long_mean_car": 0.0065,
+        "short_mean_car": -0.0183
+      },
+      "portfolio_pivotal_only": {
+        "n_total": 80,
+        "n_long": 26,
+        "n_short": 26,
+        "sharpe": 1.0883,
+        "long_mean_car": -0.0242,
+        "short_mean_car": -0.0635
+      },
+      "delta_sharpe_full_minus_baseline": 0.3414,
+      "trigger2_delta_sharpe_pass": true,
+      "interpretation": "Proper partial-α via OLS: β2 t-stat tests whether pivotal_shift adds incremental CAR-predictive power AFTER controlling for phase. |t| ≥ 2.0 (Bonferroni-K) → trigger #2 PASS at signal-existence level. Δ Sharpe (regression-fitted weights vs phase-only) = portfolio-level incremental contribution. Both metrics needed for confident PASS."
+    },
+    "rigor_pass": {
+      "computed_at": "2026-04-28T01:37:56.062883+00:00",
+      "horizon": "t_0_to_30",
+      "n_long_positive": 112,
+      "n_short": 25,
+      "short_arm": "negative",
+      "mean_positive_car": 0.0014,
+      "mean_short_car": -0.076,
+      "spread": 0.0774,
+      "welch_t_uncorrected": 4.7474,
+      "welch_t_threshold_uncorrected": 2.0,
+      "welch_t_threshold_bonferroni_18": 2.99,
+      "pass_uncorrected": true,
+      "pass_bonferroni_18": true,
+      "bootstrap_ci_positive_95pct": [
+        -0.0208,
+        0.0236
+      ],
+      "bootstrap_ci_short_95pct": [
+        -0.0976,
+        -0.0531
+      ],
+      "bootstrap_ci_zero_in_positive": true,
+      "event_level_sharpe": 0.1305,
+      "deflated_sharpe_p_value_n_trials_18": 1.0,
+      "by_pivotal_count": {
+        "negative": 25,
+        "neutral": 126,
+        "positive": 112,
+        "unknown": 265
+      }
+    },
+    "phase_transition_roc": {
+      "n_pt_records": 20765,
+      "n_paired": 94,
+      "n_transitioned": 6,
+      "n_not_transitioned": 88,
+      "transition_rate_in_paired": 0.0638,
+      "roc_auc": 0.5852,
+      "trigger1_threshold": 0.65,
+      "trigger1_pass": false
+    }
+  },
+  "layer_decision": {
+    "computed_at": "2026-04-28T01:37:56.170006+00:00",
+    "n_events_regression": 80,
+    "minority_class_count": 25,
+    "f1_1_lock_safe": true,
+    "tentative": false,
+    "metrics": {
+      "cross_llm_majority_rate": 0.9929,
+      "car_welch_t_30": 4.7474,
+      "car_bonferroni_critical": 2.99,
+      "incremental_partial_alpha_t": 0.958,
+      "incremental_bonferroni_critical": 2.99,
+      "incremental_delta_sharpe": 0.3414,
+      "pivotal_only_sharpe": 1.0883,
+      "by_pivotal_count": {
+        "negative": 25,
+        "neutral": 126,
+        "positive": 112,
+        "unknown": 265
+      }
+    },
+    "triggers": {
+      "trigger4_cross_llm_majority": true,
+      "trigger3_car_uncorrected": true,
+      "trigger3_car_bonferroni_18": true,
+      "trigger2_partial_alpha_uncorrected": false,
+      "trigger2_partial_alpha_bonferroni": false,
+      "trigger2_delta_sharpe_03": true,
+      "f1_1_lock_safe": true
+    },
+    "candidate_layers": {
+      "A_hard_triggers": true,
+      "Hybrid_A+D": false,
+      "D": false,
+      "C": false,
+      "tentative_caveat": false
+    },
+    "decision": "A",
+    "decision_reason": "All hard triggers PASS Bonferroni-strict (cross-LLM True, CAR-Bonf True, Δ Sharpe True OR partial-α-Bonf False). F1-1 lock-safe.",
+    "next_action": "Day 19-20: SSRN paper draft + Streamlit dashboard + Day 21 hard cap"
+  }
+}
