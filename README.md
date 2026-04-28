@@ -2,7 +2,7 @@
 
 ClinicalTrials.gov v2 amendment text × multi-vendor LLM ensemble × 3-axis *pivotal shift* classification → biotech forward CAR cross-section.
 
-**Status**: ✅ **Layer A LOCKED** (Phase 1 closed 2026-04-28)
+**Status**: ✅ **Layer A LOCKED** (Phase 1 closed 2026-04-28). **한국어 실무 보고**: [README_KR.md](README_KR.md).
 **Type**: discovery-form alpha-research, F1 frozen swap-queue 1순위 fill, **portfolio first Layer A success**.
 **Daemon**: PURE daemon-free (Gate F ✓) — ClinicalTrials.gov v2 API + yfinance + OpenRouter only.
 
