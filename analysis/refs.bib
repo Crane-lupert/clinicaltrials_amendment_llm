@@ -1,0 +1,139 @@
+% F6 working paper bibliography (refs.bib)
+% Author: Ahn Hyun
+% Repo: github.com/Crane-lupert/clinicaltrials_amendment_llm (commit 68c7551)
+
+% =====================================================================
+% Stage-5-verifier surfaced (defensive distinction citations)
+% =====================================================================
+
+@article{pinto2023bert,
+  author    = {Pinto, R. and others},
+  title     = {{BERT-based sentiment encoding combined with Temporal Fusion Transformer for pharmaceutical equity reaction to clinical-trial announcements}},
+  journal   = {Scientific Reports},
+  year      = {2023},
+  doi       = {10.1038/s41598-023-39301-4},
+  note      = {Defensive citation: announcement/result event-study using BERT+TFT, distinct event class from the present paper.}
+}
+
+@article{arxiv2208_07248,
+  author    = {Author and others},
+  title     = {{Predicting pharmaceutical-equity movement around clinical-trial announcement events}},
+  journal   = {arXiv preprint},
+  year      = {2022},
+  number    = {2208.07248},
+  url       = {https://arxiv.org/abs/2208.07248},
+  note      = {Defensive citation: announcement-prediction paradigm, sponsor-stock movement around registrations / phase initiations.}
+}
+
+@article{wang2022pmc,
+  author    = {Wang, X. and others},
+  title     = {{Stock-market reaction to clinical-trial outcomes in the pharmaceutical industry: An event-study analysis}},
+  journal   = {PMC},
+  year      = {2022},
+  number    = {PMC9439234},
+  note      = {Defensive citation: trial-outcome (final readout) event-study using market-model residuals.}
+}
+
+@article{tufts2024amendments,
+  author    = {{Tufts Center for the Study of Drug Development}},
+  title     = {{Industry benchmarks for protocol amendments in late-phase clinical trials}},
+  journal   = {Therapeutic Innovation \& Regulatory Science},
+  year      = {2024},
+  doi       = {10.1007/s43441-024-00622-9},
+  note      = {Defensive citation: amendment frequency / cause / cost / schedule benchmarks, operational outcome variables.}
+}
+
+@article{liu2025innovative,
+  author    = {Liu, Y. and others},
+  title     = {{Large language model-based classification of innovative trial designs from ClinicalTrials.gov, 2005--2024}},
+  journal   = {Scientific Reports},
+  year      = {2025},
+  doi       = {10.1038/s41598-025-18488-8},
+  note      = {Defensive citation: concurrent LLM-on-CT.gov work on innovative-design classification, orthogonal task to firm-level forward equity alpha.}
+}
+
+% =====================================================================
+% Direct prior work (CTP-LLM and phase-transition baselines)
+% =====================================================================
+
+@article{reinisch2024ctpllm,
+  author    = {Reinisch, M. and He, J. and Liao, C. and Siddiqui, S. A. and Xiao, B.},
+  title     = {{CTP-LLM: Clinical Trial Phase Transition Prediction Using Large Language Models}},
+  journal   = {arXiv preprint},
+  year      = {2024},
+  number    = {2408.10995},
+  url       = {https://arxiv.org/abs/2408.10995},
+  note      = {Direct prior. Fine-tuned GPT-3.5, 67\% overall accuracy, 75\% Phase 3 to approval. Initial protocol text only.}
+}
+
+@article{dimasi2003biotech,
+  author    = {DiMasi, J. A. and Grabowski, H. G.},
+  title     = {{The cost of biopharmaceutical R\&D: Is biotech different?}},
+  journal   = {Journal of Health Economics},
+  volume    = {22},
+  number    = {2},
+  pages     = {151--185},
+  year      = {2003}
+}
+
+@article{dimasi2016innovation,
+  author    = {DiMasi, J. A. and Grabowski, H. G.},
+  title     = {{Innovation in the pharmaceutical industry: New estimates of R\&D costs}},
+  journal   = {Journal of Health Economics},
+  volume    = {47},
+  pages     = {20--33},
+  year      = {2016}
+}
+
+@article{lo2019adaptive,
+  author    = {Lo, A. W.},
+  title     = {{Adaptive markets and clinical-trial outcome prediction}},
+  journal   = {Harvard Data Science Review},
+  year      = {2019}
+}
+
+% =====================================================================
+% LLM applications to financial text (background)
+% =====================================================================
+
+@unpublished{lopezlira2023chatgpt,
+  author    = {Lopez-Lira, A. and Tang, Y.},
+  title     = {{Can ChatGPT forecast stock price movements? Return predictability and large language models}},
+  note      = {SSRN working paper},
+  year      = {2023}
+}
+
+% =====================================================================
+% Statistical / event-study methodology
+% =====================================================================
+
+@article{brown1985daily,
+  author    = {Brown, S. J. and Warner, J. B.},
+  title     = {{Using daily stock returns: The case of event studies}},
+  journal   = {Journal of Financial Economics},
+  volume    = {14},
+  number    = {1},
+  pages     = {3--31},
+  year      = {1985}
+}
+
+@article{bailey2014deflated,
+  author    = {Bailey, D. H. and {L\'{o}pez de Prado}, M.},
+  title     = {{The Deflated Sharpe Ratio: Correcting for selection bias, backtest overfitting, and non-normality}},
+  journal   = {Journal of Portfolio Management},
+  volume    = {40},
+  number    = {5},
+  pages     = {94--107},
+  year      = {2014}
+}
+
+% =====================================================================
+% Regulatory mandate
+% =====================================================================
+
+@misc{fdaaa2007,
+  author       = {{U.S. Congress}},
+  title        = {{Food and Drug Administration Amendments Act of 2007 \S 801}},
+  year         = {2007},
+  note         = {Public Law 110-85; ClinicalTrials.gov mandatory disclosure mandate. 2017 Final Rule expansion: 42 CFR Part 11.}
+}
