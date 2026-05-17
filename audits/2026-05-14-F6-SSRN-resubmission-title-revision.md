@@ -4,6 +4,8 @@
 **Phase**: Post-Layer-A SSRN resubmission (Karpathy-surgical metadata-only revision)
 **Audit form**: Change Manifest §0 — explicit lock-fact preservation table + Karpathy compliance check + diff verification.
 
+> **⚠️ 2026-05-17 superseded — outcome update**: Resubmission documented in this audit was ALSO declined by SSRN (2nd decline). New rejection message stronger ("does not meet SSRN's submission requirements ... submission type and screening criteria"). LLM-in-title hypothesis (this audit's mitigation thesis) is invalidated since the resubmission removed LLM from title and was still rejected. Followed by **2026-05-17 post-publication dedup audit** which discovered that the underlying Welch t = 4.37 was itself inflated by row-aggregation independence violation in `rigor_pass.py`; corrected to Welch t = 1.69 (FAIL Bonferroni-18 + FAIL uncorrected), directional finding preserved. **F6 SSRN worktrack retired** in favor of **GitHub-only pivot** (QR Scout audience reads GitHub README + paper PDF in repo + commit chain, not SSRN abstract page). See `D:/vscode/meta-harness/reports/papers/2026-05-17-clinicaltrials-amendment-paper-dedup-audit.md` for full audit trail. This file is preserved as historical record of the 2026-05-14 mitigation attempt.
+
 ---
 
 ## §0. Change Manifest

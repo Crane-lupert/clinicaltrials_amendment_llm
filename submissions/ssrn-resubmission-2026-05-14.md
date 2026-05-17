@@ -1,8 +1,11 @@
 # F6 — SSRN Resubmission Package (2026-05-14)
 
+> **⚠️ 2026-05-17 — RETIRED**: This resubmission was declined by SSRN (2nd decline). Decline message stronger than 1st: "does not meet SSRN's submission requirements... submission type and screening criteria". LLM-in-title hypothesis (this package's mitigation) is invalidated since title removed LLM and was still rejected. **F6 SSRN worktrack retired** — pivoted to GitHub-only artifact strategy (QR Scout audience: GitHub README + repo paper PDF + commit chain matter more than SSRN abstract page; SSRN click rate <5% for HF hiring funnels). The "Numerical-fact preservation" note below is also superseded: 2026-05-17 dedup audit found Welch t = 4.37 was inflated by row-aggregation independence violation in `rigor_pass.py`; corrected Welch t = 1.69 at unique-amendment level (FAIL Bonferroni-18 + FAIL uncorrected). Direction (-7.48% spread) preserved; strict-significance certificate withdrawn. See `D:/vscode/meta-harness/reports/papers/2026-05-17-clinicaltrials-amendment-paper-dedup-audit.md` + `analysis/paper_v2_en.md` §7 Post-Publication Self-Correction. **This file is preserved as historical record of the 2026-05-14 resubmission attempt**.
+
 **Project**: F6 — ClinicalTrials.gov Protocol Amendments × Cross-Section Pharmaceutical Stock Returns
 **Original SSRN Abstract ID**: 6729799 (submitted 2026-05-08 KST, rejected 2026-05-14 KST)
-**Resubmission target**: SSRN Empirical Asset Pricing / Event Studies network
+**2nd Resubmission outcome**: Declined (post-2026-05-14, stronger rejection language)
+**Resubmission target** *(retired)*: SSRN Empirical Asset Pricing / Event Studies network
 **Revision scope**: surgical metadata only — title, abstract opening (sentence 1), keywords, JEL. Methodology, results, §3 LLM extraction body, reproducibility, GitHub repo, tables, references — all unchanged.
 **Rebuilt PDF**: `analysis/paper_v2_en.pdf` (overwritten, ~129KB, pandoc 3.9 + xelatex + citeproc)
 **Numerical-fact preservation**: ✅ Welch t=4.37 (8 occurrences), Δ Sharpe 0.341 (5 occurrences), cross-LLM 99.29 (4 occurrences), Bonferroni-18 / eighteen-test (14 occurrences), minority-class n=21 (preserved in abstract + §5 + §1) — all regreppable in rebuilt PDF text.
