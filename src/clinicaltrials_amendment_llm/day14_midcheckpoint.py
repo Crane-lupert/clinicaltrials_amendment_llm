@@ -69,10 +69,22 @@ def axis_distribution() -> dict:
 
 
 def car_effect_size(horizon: str = "t_0_to_5") -> dict:
-    """CAR effect size: low-pivotal-shift quintile minus high-pivotal-shift."""
-    by_pivotal: dict[str, list[float]] = defaultdict(list)
+    """CAR effect size: low-pivotal-shift quintile minus high-pivotal-shift.
+
+    2026-05-17 dedup audit: replaced row-iteration aggregation with
+    (nct_id, event_date) dedup. Welch's t-test assumes independent
+    observations; re-classification rows of the same amendment are not
+    independent and inflated the t-statistic under the prior method.
+    Consensus pivotal_shift label per unique amendment is the most-common
+    non-unknown label across rows.
+    """
+    labels = _latest_labels_by_nct()
+    seen: dict[tuple[str, str], dict] = {}
     for r in read_manifest(MANIFEST_CAR):
-        ps = r.get("pivotal_shift")
+        nct = r.get("nct_id")
+        ed = r.get("event_date")
+        if not nct or not ed:
+            continue
         hzns = r.get("horizons") or {}
         h = hzns.get(horizon)
         if not isinstance(h, dict):
@@ -80,7 +92,26 @@ def car_effect_size(horizon: str = "t_0_to_5") -> dict:
         car = h.get("car")
         if car is None:
             continue
-        by_pivotal[ps].append(float(car))
+        key = (nct, ed)
+        if key not in seen:
+            seen[key] = {"car": float(car), "labels": []}
+        ps_row = r.get("pivotal_shift")
+        if ps_row:
+            seen[key]["labels"].append(ps_row)
+
+    by_pivotal: dict[str, list[float]] = defaultdict(list)
+    for (nct, _ed), ev in seen.items():
+        consensus = labels.get(nct, {}).get("pivotal_shift")
+        if not consensus:
+            counts: dict[str, int] = defaultdict(int)
+            for v in ev["labels"]:
+                if v and v != "unknown":
+                    counts[v] += 1
+            if counts:
+                consensus = max(counts.items(), key=lambda kv: kv[1])[0]
+            else:
+                consensus = "unknown"
+        by_pivotal[consensus].append(ev["car"])
 
     # Spread: long-positive (positive amendments) vs short-negative (negative amendments).
     # If "negative" is sparse, fall back to neutral as the short leg.

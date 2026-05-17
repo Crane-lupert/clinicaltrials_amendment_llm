@@ -1,32 +1,61 @@
 {
-  "computed_at": "2026-04-28T01:37:56.062883+00:00",
+  "computed_at": "2026-05-16T17:32:40.606277+00:00",
   "horizon": "t_0_to_30",
-  "n_long_positive": 112,
-  "n_short": 25,
-  "short_arm": "negative",
+  "aggregation": "dedup_by_nct_event_date",
+  "n_long_positive": 16,
+  "n_short": 20,
+  "short_arm": "neutral",
   "mean_positive_car": 0.0014,
-  "mean_short_car": -0.076,
-  "spread": 0.0774,
-  "welch_t_uncorrected": 4.7474,
+  "mean_short_car": -0.0365,
+  "spread": 0.0379,
+  "welch_t_uncorrected": 0.8375,
   "welch_t_threshold_uncorrected": 2.0,
   "welch_t_threshold_bonferroni_18": 2.99,
-  "pass_uncorrected": true,
-  "pass_bonferroni_18": true,
+  "pass_uncorrected": false,
+  "pass_bonferroni_18": false,
   "bootstrap_ci_positive_95pct": [
-    -0.0208,
-    0.0236
+    -0.0597,
+    0.0585
   ],
   "bootstrap_ci_short_95pct": [
-    -0.0976,
-    -0.0531
+    -0.0992,
+    0.0212
   ],
   "bootstrap_ci_zero_in_positive": true,
-  "event_level_sharpe": 0.1305,
+  "event_level_sharpe": 0.1527,
   "deflated_sharpe_p_value_n_trials_18": 1.0,
   "by_pivotal_count": {
-    "negative": 25,
-    "neutral": 126,
-    "positive": 112,
-    "unknown": 265
+    "negative": 4,
+    "neutral": 20,
+    "positive": 16,
+    "unknown": 40
+  },
+  "strict_positive_vs_negative": {
+    "n_long_positive": 16,
+    "n_short_negative": 4,
+    "mean_positive_car": 0.0014,
+    "mean_negative_car": -0.0734,
+    "spread": 0.0748,
+    "welch_t": 1.6929,
+    "pass_uncorrected": false,
+    "pass_bonferroni_18": false,
+    "bootstrap_ci_negative_95pct": [
+      null,
+      null
+    ]
+  },
+  "pre_dedup_raw_for_audit": {
+    "comment": "Row-iteration aggregation of MANIFEST_CAR; same amendment may contribute multiple rows due to re-classification runs. Welch's independence assumption violated; do not use for inference.",
+    "n_long_positive_raw": 144,
+    "n_short_raw": 33,
+    "short_arm_raw": "negative",
+    "spread_raw": 0.0768,
+    "welch_t_raw": 5.4207,
+    "by_pivotal_count_raw": {
+      "negative": 33,
+      "neutral": 166,
+      "positive": 144,
+      "unknown": 345
+    }
   }
 }

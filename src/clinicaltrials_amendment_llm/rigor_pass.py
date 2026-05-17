@@ -6,6 +6,18 @@ reference-validation §4.5 and Phase 0 plan §1 Day 19.
 
 Per F1-2 Gate H lesson: report sample-power-corrected critical t alongside
 the raw t-stat.
+
+2026-05-17 dedup audit (post-publish self-correction): the original
+implementation iterated every row in MANIFEST_CAR, so re-classification
+runs of the same amendment were each treated as an independent observation.
+This inflated the Welch t-statistic and shrank standard errors. Welch's
+test assumes independent observations, which is violated when the same
+event's CAR is replicated five-to-ten times across rows. The corrected
+implementation deduplicates by (nct_id, event_date) to obtain one
+observation per unique amendment event, then assigns a consensus
+pivotal_shift label via the most-common non-unknown vote across rows
+(with fallback to _latest_labels_by_nct). Pre-dedup raw counts are
+preserved under "pre_dedup_raw_for_audit" for transparency.
 """
 
 from __future__ import annotations
@@ -90,21 +102,82 @@ def _deflated_sharpe(sharpe: float, n_obs: int, n_trials: int) -> float:
     return 0.5 * (1 - math.erf(z / math.sqrt(2)))
 
 
-def run_rigor_pass(horizon: str = "t_0_to_30") -> dict:
-    """Apply rigor corrections to the cross-section CAR spread."""
-    labels = _latest_labels_by_nct()
+def _bucket_by_pivotal(horizon: str, dedup: bool) -> tuple[dict[str, list[float]], dict[str, int]]:
+    """Group CAR observations by pivotal_shift consensus.
 
+    When dedup=True (the corrected method), the same (nct_id, event_date)
+    contributes a single CAR observation and a single consensus label,
+    computed as the most-common non-unknown label across rows for that
+    amendment, with fallback to the separate axis_classify manifest.
+
+    When dedup=False (raw rows, the pre-2026-05-17 method), every row of
+    MANIFEST_CAR contributes an observation. Returned for audit only;
+    standard errors and Welch t under this aggregation are not valid
+    because re-classification rows are not independent observations.
+
+    Returns (by_pivotal, by_pivotal_count).
+    """
+    labels = _latest_labels_by_nct()
     by_pivotal: dict[str, list[float]] = defaultdict(list)
-    for r in read_manifest(MANIFEST_CAR):
-        nct = r.get("nct_id")
-        ps = labels.get(nct, {}).get("pivotal_shift") or r.get("pivotal_shift")
-        h = (r.get("horizons") or {}).get(horizon)
-        if not isinstance(h, dict):
-            continue
-        c = h.get("car")
-        if c is None:
-            continue
-        by_pivotal[ps].append(float(c))
+
+    if not dedup:
+        for r in read_manifest(MANIFEST_CAR):
+            nct = r.get("nct_id")
+            ps = labels.get(nct, {}).get("pivotal_shift") or r.get("pivotal_shift")
+            h = (r.get("horizons") or {}).get(horizon)
+            if not isinstance(h, dict):
+                continue
+            c = h.get("car")
+            if c is None:
+                continue
+            by_pivotal[ps].append(float(c))
+    else:
+        seen: dict[tuple[str, str], dict] = {}
+        for r in read_manifest(MANIFEST_CAR):
+            nct = r.get("nct_id")
+            ed = r.get("event_date")
+            if not nct or not ed:
+                continue
+            h = (r.get("horizons") or {}).get(horizon)
+            if not isinstance(h, dict):
+                continue
+            c = h.get("car")
+            if c is None:
+                continue
+            key = (nct, ed)
+            if key not in seen:
+                seen[key] = {"car": float(c), "labels": []}
+            ps_row = r.get("pivotal_shift")
+            if ps_row:
+                seen[key]["labels"].append(ps_row)
+
+        for (nct, _ed), ev in seen.items():
+            consensus = labels.get(nct, {}).get("pivotal_shift")
+            if not consensus:
+                counts: dict[str, int] = defaultdict(int)
+                for v in ev["labels"]:
+                    if v and v != "unknown":
+                        counts[v] += 1
+                if counts:
+                    consensus = max(counts.items(), key=lambda kv: kv[1])[0]
+                else:
+                    consensus = "unknown"
+            by_pivotal[consensus].append(ev["car"])
+
+    return by_pivotal, {k: len(v) for k, v in by_pivotal.items()}
+
+
+def run_rigor_pass(horizon: str = "t_0_to_30") -> dict:
+    """Apply rigor corrections to the cross-section CAR spread.
+
+    Uses (nct_id, event_date) dedup so each amendment contributes one
+    observation. Welch's t-test, Bootstrap CI and Bonferroni correction
+    all assume independent observations; the pre-2026-05-17 row-iteration
+    implementation violated this assumption and is preserved under
+    "pre_dedup_raw_for_audit" for transparency.
+    """
+    by_pivotal, count_map = _bucket_by_pivotal(horizon, dedup=True)
+    raw_by_pivotal, raw_count_map = _bucket_by_pivotal(horizon, dedup=False)
 
     pos = by_pivotal.get("positive", [])
     neg = by_pivotal.get("negative", [])
@@ -131,9 +204,28 @@ def run_rigor_pass(horizon: str = "t_0_to_30") -> dict:
 
     dsr_p = _deflated_sharpe(sharpe, len(spread_returns), n_tests_planned)
 
+    # Always also compute the strict positive-vs-negative comparison (the
+    # paper's original framing) even when the rigor_pass fallback degrades
+    # to the neutral arm. This keeps the same test reproducible after dedup
+    # even with very small n_negative.
+    strict_t, strict_nl, strict_ns = _welch_t(pos, neg)
+    strict_spread = (sum(pos) / max(strict_nl, 1)) - (sum(neg) / max(strict_ns, 1)) if (pos and neg) else float("nan")
+    strict_neg_lo, strict_neg_hi = _bootstrap_ci(neg)
+
+    # Audit-only: pre-dedup raw-row aggregation (the pre-2026-05-17 method),
+    # preserved so the inflated t-statistic can be reproduced from the same
+    # source data for transparency. These figures must not be used for
+    # inference.
+    raw_pos = raw_by_pivotal.get("positive", [])
+    raw_short_arm = "negative" if len(raw_by_pivotal.get("negative", [])) >= 5 else "neutral"
+    raw_short = raw_by_pivotal.get(raw_short_arm, [])
+    raw_t, raw_nl, raw_ns = _welch_t(raw_pos, raw_short)
+    raw_spread = (sum(raw_pos) / max(raw_nl, 1)) - (sum(raw_short) / max(raw_ns, 1)) if (raw_pos and raw_short) else float("nan")
+
     return {
         "computed_at": datetime.now(tz=timezone.utc).isoformat(),
         "horizon": horizon,
+        "aggregation": "dedup_by_nct_event_date",
         "n_long_positive": n_long,
         "n_short": n_short,
         "short_arm": short_arm,
@@ -153,6 +245,27 @@ def run_rigor_pass(horizon: str = "t_0_to_30") -> dict:
         "event_level_sharpe": round(sharpe, 4) if not (sharpe != sharpe) else None,
         "deflated_sharpe_p_value_n_trials_18": round(dsr_p, 4) if not (dsr_p != dsr_p) else None,
         "by_pivotal_count": {k: len(v) for k, v in by_pivotal.items()},
+        "strict_positive_vs_negative": {
+            "n_long_positive": strict_nl,
+            "n_short_negative": strict_ns,
+            "mean_positive_car": round(sum(pos) / max(strict_nl, 1), 4) if pos else None,
+            "mean_negative_car": round(sum(neg) / max(strict_ns, 1), 4) if neg else None,
+            "spread": round(strict_spread, 4) if not (strict_spread != strict_spread) else None,
+            "welch_t": round(strict_t, 4) if not (strict_t != strict_t) else None,
+            "pass_uncorrected": bool(strict_t == strict_t and abs(strict_t) >= 2.0),
+            "pass_bonferroni_18": bool(strict_t == strict_t and abs(strict_t) >= bonf_critical),
+            "bootstrap_ci_negative_95pct": (round(strict_neg_lo, 4) if strict_neg_lo == strict_neg_lo else None,
+                                              round(strict_neg_hi, 4) if strict_neg_hi == strict_neg_hi else None),
+        },
+        "pre_dedup_raw_for_audit": {
+            "comment": "Row-iteration aggregation of MANIFEST_CAR; same amendment may contribute multiple rows due to re-classification runs. Welch's independence assumption violated; do not use for inference.",
+            "n_long_positive_raw": raw_nl,
+            "n_short_raw": raw_ns,
+            "short_arm_raw": raw_short_arm,
+            "spread_raw": round(raw_spread, 4) if not (raw_spread != raw_spread) else None,
+            "welch_t_raw": round(raw_t, 4) if not (raw_t != raw_t) else None,
+            "by_pivotal_count_raw": raw_count_map,
+        },
     }
 
 

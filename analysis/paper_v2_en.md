@@ -1,9 +1,9 @@
 ---
-title: "Protocol Amendments and Cross-Section Pharmaceutical Stock Returns: A Bonferroni-Strict Event Study from ClinicalTrials.gov"
+title: "Protocol Amendments and Cross-Section Pharmaceutical Stock Returns: A Multi-Vendor LLM Event Study from ClinicalTrials.gov"
 author: "Ahn Hyun"
 date: "May 2026"
 abstract: |
-  This study examines whether post-trial-start protocol amendments registered on ClinicalTrials.gov carry directional information about forward sponsor-firm equity returns at the cross-section, under Bonferroni-strict multiple-testing correction. The empirical setting is the fifteen-year panel 2010–2024 of 25,000 industry-sponsored Phase 2 and Phase 3 trial records. To convert unstructured amendment text into a tractable structured signal at scale, a three-vendor ensemble (Anthropic Claude Haiku 4.5, Meta Llama 3.3 70B Instruct, OpenAI GPT-4o-mini) extracts a three-axis classification of each trial's most recent amendment text—pivotal-shift direction, administrative-versus-substantive scope, and decision-driver locus. After mapping sponsor names to listed-equity tickers, the matched panel contains 152 event-window cumulative-abnormal-return observations and 80 regression-ready observations with full three-vendor consensus. The pre-registered long-positive minus short-negative spread at the thirty-trading-day horizon is +7.79 percent with Welch *t* = 4.37, exceeding the Bonferroni-corrected critical value of 2.99 (eighteen-test family, two-tailed) by a margin of 1.38. Relative to a transparent phase-only baseline that proxies the @reinisch2024ctpllm phase-transition predictor, the regression-fitted combination of phase and pivotal scores delivers an incremental Sharpe ratio of +0.341, exceeding the pre-registered threshold of 0.30. Cross-vendor two-of-three majority agreement is 99.29 percent across the three axes (95 trials with full coverage), and the minority-class size at 21 satisfies the conservative $n \ge 20$ threshold for stable inference on label-distribution-sensitive estimators. The contribution is positioned at the boundary of three literatures. Existing trial-event–to–return work concentrates on trial *announcements* and *results* [@pinto2023bert; @arxiv2208_07248; @wang2022pmc]; the protocol-amendment literature is operational and cost-focused [@tufts2024amendments]; and concurrent LLM applications to ClinicalTrials.gov text address orthogonal classification tasks [@liu2025innovative]. To my knowledge this is the first paper to use post-trial-start protocol amendments as the unit of cross-section equity-return prediction, and the first to verify that the resulting amendment-derived signal is incremental over a CTP-LLM-style phase-transition baseline. The full pipeline runs from the public ClinicalTrials.gov registry to the final alpha summary using only public data sources, and the extraction prompts, statistical scripts, and a locally runnable visualization dashboard are released in the public repository at the commit hash listed in Appendix B.
+  This study examines whether post-trial-start protocol amendments registered on ClinicalTrials.gov carry directional information about forward sponsor-firm equity returns at the cross-section. The empirical setting is the fifteen-year panel 2010–2024 of 25,000 industry-sponsored Phase 2 and Phase 3 trial records. To convert unstructured amendment text into a tractable structured signal at scale, a three-vendor ensemble (Anthropic Claude Haiku 4.5, Meta Llama 3.3 70B Instruct, OpenAI GPT-4o-mini) extracts a three-axis classification of each trial's most recent amendment text—pivotal-shift direction, administrative-versus-substantive scope, and decision-driver locus. After mapping sponsor names to listed-equity tickers and deduplicating re-classification rows to obtain one observation per unique amendment event, the matched panel contains 80 unique-amendment cumulative-abnormal-return observations. At the thirty-trading-day horizon, negative pivotal-shift amendments ($n = 4$) underperform SPY by 7.34 percent on average while positive pivotal-shift amendments ($n = 16$) return $+0.14$ percent, a cross-section spread of $+7.48$ percentage points. Welch's $t$-statistic on this strict positive-versus-negative spread is $1.69$ ($\mathrm{df} \approx 10$), which does not exceed the conventional $\alpha = 0.05$ threshold or the Bonferroni-corrected critical value of $2.99$ at $K = 18$; the directional effect is therefore documented as a *preliminary scout-feasible candidate* rather than a deployed alpha. An earlier draft of this paper reported $\text{Welch } t = 4.37$ under Bonferroni-$K = 18$ strict-pass, computed on row-iteration aggregation of the per-event re-classification manifest; that aggregation violated Welch's independence assumption and is corrected in this revision (see §7 Post-Publication Self-Correction). Relative to a transparent phase-only baseline that proxies the @reinisch2024ctpllm phase-transition predictor, the regression-fitted combination of phase and pivotal scores delivers an incremental Sharpe ratio of $+0.341$ (the regression aggregation already deduplicates and is unaffected by the same artifact). Cross-vendor two-of-three majority agreement is $99.29$ percent across the three axes (95 trials with full coverage). The contribution is positioned at the boundary of three literatures. Existing trial-event–to–return work concentrates on trial *announcements* and *results* [@pinto2023bert; @arxiv2208_07248; @wang2022pmc]; the protocol-amendment literature is operational and cost-focused [@tufts2024amendments]; and concurrent LLM applications to ClinicalTrials.gov text address orthogonal classification tasks [@liu2025innovative]. To my knowledge this is the first paper to use post-trial-start protocol amendments as the unit of cross-section equity-return prediction, and the first to verify that the resulting amendment-derived signal is incremental over a CTP-LLM-style phase-transition baseline. The full pipeline runs from the public ClinicalTrials.gov registry to the final alpha summary using only public data sources, and the extraction prompts, statistical scripts, and a locally runnable visualization dashboard are released in the public repository at the commit hash listed in Appendix B.
 keywords: "event study; protocol amendments; pharmaceutical stocks; ClinicalTrials.gov; Bonferroni correction; cross-section returns; multi-vendor LLM ensemble; large language model; NLP-assisted extraction"
 jel: G12, G14, G18, I11
 ssrn-classification: "Finance > Asset Pricing > Event Studies"
@@ -34,7 +34,7 @@ The existing event-study literature linking clinical trials to sponsor-firm equi
 
 This study makes four contributions. First, the unit of equity-event analysis is redefined as the post-trial-start protocol amendment, distinct from announcements and results both in timing and in the textual richness of the change description itself. Second, rather than reduce amendment text to a binary positive-or-negative sentiment, a three-axis structured classification is extracted—pivotal-shift, administrative-versus-substantive, and decision-driver locus—enabling separate testing of mechanism components. Third, the extraction is performed by a three-vendor ensemble and the cross-vendor majority-agreement rate is treated as a schema-validity diagnostic, protecting against single-vendor classification artifacts. Fourth, building on the phase-transition prediction work of @reinisch2024ctpllm, a transparent phase-only baseline is constructed from registry metadata alone and the LLM amendment features are tested for *incremental* portfolio Sharpe ratio above this baseline, with the regression-fitted feature combination compared explicitly against a naive additive specification that suffers from a feature-scale-mismatch artifact.
 
-The principal empirical findings are these. The cross-section spread between the long-positive and short-negative amendment cohorts at the thirty-trading-day horizon is +7.79 percent with Welch *t* = 4.37, which survives the strict Bonferroni-corrected critical value of 2.99 by a margin of 1.38. The LLM amendment features add an incremental Sharpe of +0.341 over the phase-only baseline; the standalone pivotal-shift portfolio in isolation delivers Sharpe 1.088. Cross-vendor two-of-three majority agreement is 99.29 percent across the three classification axes (95 trials with full coverage), and the minority-class size of 21 satisfies the conservative threshold $n \ge 20$ below which label-distribution-sensitive estimators are subject to single-observation flips. A secondary test on the same LLM features for raw phase-transition prediction yields ROC-AUC of 0.585, below the pre-registered 0.65 threshold; this auxiliary failure is interpreted in §5.4 as evidence that the amendment direction signal is *complementary* to the @reinisch2024ctpllm phase-transition signal rather than a stronger version of it.
+The principal empirical findings are these. Under proper deduplication by unique amendment event, the cross-section spread between the long-positive and short-negative cohorts at the thirty-trading-day horizon is $+7.48$ percentage points—negative pivotal-shift amendments (n = 4 unique events) underperform SPY by 7.34 percent on average while positive pivotal-shift amendments (n = 16 unique events) return $+0.14$ percent. Welch's $t$-statistic on this spread is $1.69$, which does not exceed the conventional $\alpha = 0.05$ threshold and does not exceed the strict Bonferroni-corrected critical value of $2.99$ at $K = 18$; the directional effect is therefore documented as a preliminary scout-feasible candidate rather than a deployed alpha. The LLM amendment features add an incremental Sharpe of $+0.341$ over the phase-only baseline (the regression aggregation is already at unique-amendment level and is unaffected by the row-aggregation artifact discussed in §7); the standalone pivotal-shift portfolio in isolation delivers Sharpe $1.088$. Cross-vendor two-of-three majority agreement is $99.29$ percent across the three classification axes (95 trials with full coverage). The minority-class size of 4 unique negative-pivotal-shift events falls below the pre-registered $n \ge 20$ inferential-lock threshold; results are therefore reported as tentative on the strict-significance axis, but the direction and magnitude of the cross-section spread are preserved relative to the row-aggregated draft of this paper. A secondary test on the same LLM features for raw phase-transition prediction yields ROC-AUC of 0.586, below the pre-registered 0.65 threshold; this auxiliary failure is interpreted in §5.4 as evidence that the amendment direction signal is *complementary* to the @reinisch2024ctpllm phase-transition signal rather than a stronger version of it.
 
 The remainder of the paper is organized as follows. Section 2 surveys the related literature with attention to the announcement and result event-study tradition, the protocol-amendment operational benchmarks, and concurrent LLM applications on ClinicalTrials.gov text. Section 3 describes data sources and sample construction. Section 4 specifies the three-axis schema, the multi-vendor extraction procedure, and the statistical framework including the Bonferroni correction and the bootstrap inference layer. Section 5 reports the four pre-registered tests. Section 6 presents the robustness battery. Section 7 catalogs limitations. Section 8 concludes. Appendices document the LLM prompt schema, the reproduction commit hash, and methodological notes of independent interest.
 
@@ -106,15 +106,15 @@ The realized sample at successive pipeline stages is summarized in Table 2.
 |:---------------------------------------------------------------|----------:|:-------------------------------------|
 | Industry-sponsored Phase 2/3 trials, 2010–2024                 |    25,000 | Universe definition                  |
 | Sponsor-to-ticker-mapped trials                                |     9,083 | Mapping-yield audit                  |
-| LLM-classified records (across vendors)                        |       343 | Classification-distribution analysis |
+| LLM classification rows across vendors (raw manifest)          |       343 | Classification-distribution analysis |
 | Trials with full three-vendor coverage                         |        95 | Cross-vendor consistency (§5.1)      |
-| Event-window CAR observations                                  |       152 | Cross-section CAR test (§5.2)        |
-| Regression-ready (CAR $\cap$ three-vendor consensus)           |        80 | Incremental Sharpe (§5.3)            |
-| Minority-class observations (negative pivotal-shift)           |        21 | Inferential lock (§5.5)              |
+| Unique-amendment CAR observations (deduplicated)               |        80 | Cross-section CAR test (§5.2)        |
+| Regression-ready unique amendments                             |        80 | Incremental Sharpe (§5.3)            |
+| Minority-class unique amendments (negative pivotal-shift)      |         4 | Inferential lock (§5.5, FAIL)        |
 
 \endgroup
 
-The cross-section CAR test in §5.2 and the incremental Sharpe test in §5.3 use slightly different sample sizes because the CAR computation operates at the event level whereas the regression requires three-vendor consensus on the LLM features.
+Each unique amendment event is identified by the pair (NCT identifier, event date). The CAR manifest stores multiple rows per event because of re-classification runs across vendors and prompt versions; under proper Welch-style independent-observation inference the rows must be collapsed to one observation per event, with a consensus label computed as the most-common non-unknown pivotal-shift label across the rows for that amendment. An earlier draft of this paper iterated rows directly, treating each re-classification as an independent observation; the corrected aggregation is used throughout this revision and the discrepancy is documented in §7.
 
 # Methodology
 
@@ -139,6 +139,8 @@ $$
 \text{CAR}_i^{[T_0, T_0+h]} \;=\; \frac{P_{i, T_0+h}}{P_{i, T_0}} - \frac{P_{\text{SPY}, T_0+h}}{P_{\text{SPY}, T_0}},
 $$
 using daily auto-adjusted close prices. A long-short cross-section portfolio is constructed at each horizon by sorting on the consensus pivotal-shift label: the long leg holds the positive tercile, the short leg holds the negative tercile.
+
+Inference is performed at the unique-amendment level. Each amendment event is identified by the pair (NCT identifier, event date), and a single CAR observation is associated with each unique event. The CAR manifest stores multiple rows per event because of re-classification runs across vendors and prompt versions; under Welch's independent-observation assumption these rows must be collapsed to one observation per event before the test, with a consensus pivotal-shift label computed as the most-common non-unknown vote across rows for that event. §7 documents that an earlier draft of this paper iterated rows directly and over-stated the Welch $t$-statistic; the corrected procedure is the one specified here.
 
 The Welch two-sample $t$-statistic on the long-minus-short spread is
 $$
@@ -192,26 +194,27 @@ The pre-registered threshold of 80-percent two-of-three majority is exceeded by 
 
 Table 4 reports the long-positive minus short-negative spread by horizon.
 
-**Table 4.** *Long-positive / short-negative spread CAR by horizon. Bonferroni-corrected critical value at $K = 18$ is $t^* = 2.99$.*
+**Table 4.** *Long-positive / short-negative spread CAR by horizon at the unique-amendment level (dedup-corrected). Bonferroni-corrected critical value at $K = 18$ is $t^* = 2.99$; uncorrected $\alpha = 0.05$ threshold is $t^* = 2.0$.*
 
 \begingroup\small
 
 | Horizon                | $n_\text{long}$ | $n_\text{short}$ | $\overline{\text{CAR}}_\text{long}$ | $\overline{\text{CAR}}_\text{short}$ |    Spread |   Welch $t$ |
 |:-----------------------|----------------:|-----------------:|------------------------------------:|-------------------------------------:|----------:|------------:|
-| $T_0$ to $T_0+5$       |             102 |               21 |                           $+0.15\%$ |                            $-0.88\%$ | $+1.02\%$ |        2.07 |
-| **$T_0$ to $T_0+30$**  |          **96** |           **21** |                       **$+0.14\%$** |                        **$-7.65\%$** | **$+7.79\%$** |    **4.37** |
+| **$T_0$ to $T_0+30$**  |          **16** |            **4** |                       **$+0.14\%$** |                        **$-7.34\%$** | **$+7.48\%$** |    **1.69** |
 
 \endgroup
 
-At the thirty-day horizon the Welch $t$-statistic of 4.37 exceeds the Bonferroni-$K = 18$ critical value of 2.99 by a margin of 1.38. The five-day spread of 1.02 percentage points is significant uncorrected ($t = 2.07$) but does not survive Bonferroni correction. The thirty-day horizon is therefore reported as primary.
+At the thirty-day horizon the Welch $t$-statistic of $1.69$ does not exceed the conventional uncorrected $\alpha = 0.05$ threshold of $2.0$, and is therefore well below the Bonferroni-$K = 18$ critical value of $2.99$. The directional effect—negative pivotal-shift amendments underperforming SPY by $7.34$ percent on average while positive pivotal-shift amendments return $+0.14$ percent—is preserved relative to an earlier draft of this paper, with the spread changing only marginally from $+7.79$ percentage points to $+7.48$ percentage points. What does not survive the dedup correction is the strict-significance certificate: the earlier draft reported Welch $t = 4.37$ under row-iteration aggregation that violated Welch's independent-observation assumption. The correction is documented in §7.
 
-The bootstrap 95-percent confidence interval for the negative arm at $T_0+30$ is $[-9.97\%, -5.11\%]$, excluding zero. The positive arm's interval $[-2.30\%, +2.47\%]$ contains zero, consistent with positive amendments being partially anticipated and pre-priced by the market while negative amendments retain unpriced informational content over a multi-week window.
+For comparison, under the audit-only row-iteration aggregation, the current data state yields $n_{\text{long-raw}} = 144$ and $n_{\text{short-raw}} = 33$ rows with spread $+7.68\%$ and Welch $t = 5.42$; that aggregation is preserved in `analysis/rigor_pass.json` under `pre_dedup_raw_for_audit` for transparency only and is not used for inference because the same amendment contributes multiple non-independent rows to each leg.
+
+A bootstrap 95-percent confidence interval on the negative arm is not reported in the dedup-corrected results because the minority class of $n = 4$ falls below the $n \ge 5$ minimum that the bootstrap implementation in `rigor_pass.py` requires for stable percentile estimation. The bootstrap CI of $[-9.97\%, -5.11\%]$ reported in the earlier draft was computed on the row-aggregated negative bucket ($n = 21$ rows) and shares the same independence-violation artifact as the inflated Welch $t$; it is withdrawn together with the inflated test.
 
 ## Incremental Sharpe over the Phase-Only Baseline
 
-Table 5 reports the OLS regression of thirty-day CAR on phase score and pivotal score.
+Table 5 reports the OLS regression of thirty-day CAR on phase score and pivotal score. The regression dataset is at the unique-amendment level by construction: rows are aggregated into a dictionary keyed on the NCT identifier before the design matrix is built, so the dedup discussed in §5.2 and §7 is enforced automatically and the regression headline numbers are unaffected by the row-aggregation artifact that affected the earlier draft's cross-section $t$-statistic.
 
-**Table 5.** *OLS regression of thirty-day CAR on phase and pivotal scores; $n = 80$. Residual standard deviation $\hat\sigma = 0.164$.*
+**Table 5.** *OLS regression of thirty-day CAR on phase and pivotal scores at the unique-amendment level; $n = 80$. Residual standard deviation $\hat\sigma = 0.164$.*
 
 | Coefficient        | Estimate | Std. error | $t$-statistic |
 |:-------------------|---------:|-----------:|--------------:|
@@ -249,7 +252,7 @@ A secondary test asks whether the same pivotal-shift score predicts the raw even
 | Total phase-transition labels           | 20,765        |
 | Paired observations (LLM × outcome)     | 94            |
 | Paired-sample transition rate           | 6.4% (6 / 94) |
-| ROC-AUC (Mann–Whitney $U$)              | **0.585**     |
+| ROC-AUC (Mann–Whitney $U$)              | **0.586**     |
 | Pre-specified threshold                 | $\ge 0.65$    |
 
 The auxiliary test does not pass. This is interpreted not as a refutation of the main results but as evidence that *amendment direction* and *phase transition* are distinct phenomena. CTP-LLM predicts whether a trial advances to its next phase from the initial protocol; the present paper predicts whether a sponsor-firm equity reacts to a mid-trial design change. The two information channels can co-exist without subsumption. Three plausible drivers of the weak ROC-AUC are: sample selection, since LLM-classified trials concentrate in 2020–2024 where phase-transition outcomes are not yet observable in a sixty-month window; outcome-label noise from the cluster-matching heuristic relative to a curated ground-truth label; and class imbalance, since only six of 94 paired observations transition, leaving very limited statistical power.
@@ -258,29 +261,30 @@ The auxiliary test does not pass. This is interpreted not as a refutation of the
 
 Table 8 collects the rigor checks applied to the pre-registered headline.
 
-**Table 8.** *Statistical-rigor checks on the thirty-day cross-section spread. Bonferroni $K = 18$ critical value $t^* = 2.99$.*
+**Table 8.** *Statistical-rigor checks on the thirty-day cross-section spread under unique-amendment dedup. Bonferroni $K = 18$ critical value $t^* = 2.99$; uncorrected $\alpha = 0.05$ threshold $t^* = 2.0$.*
 
 \begingroup\small
 
-| Check                                            |                  Value | Verdict             |
-|:-------------------------------------------------|-----------------------:|:--------------------|
-| Welch $t$ (uncorrected)                          |                 $4.37$ | pass                |
-| Welch $t$ (Bonferroni-$K = 18$)                  |                 $4.37$ | pass                |
-| Bootstrap 95% CI, negative arm                   |   $[-9.97\%, -5.11\%]$ | pass                |
-| Bootstrap 95% CI, positive arm                   |   $[-2.30\%, +2.47\%]$ | contains zero       |
-| Event-level Sharpe (long-short, 30-day)          |                $0.129$ | weak per-event      |
-| Deflated Sharpe Ratio $p$, $K = 18$              |                  $1.0$ | not significant     |
-| Minority-class size for inferential lock         |                   $21$ | pass                |
+| Check                                            |                Value | Verdict             |
+|:-------------------------------------------------|---------------------:|:--------------------|
+| Welch $t$ (uncorrected)                          |               $1.69$ | fail                |
+| Welch $t$ (Bonferroni-$K = 18$)                  |               $1.69$ | fail                |
+| Bootstrap 95% CI, negative arm                   |       not computable | $n_{\text{neg}}=4<5$ |
+| Event-level Sharpe (long-short, 30-day)          |              $0.153$ | weak per-event      |
+| Deflated Sharpe Ratio $p$, $K = 18$              |                $1.0$ | not significant     |
+| Minority-class size for inferential lock         |                  $4$ | fail ($n < 20$)     |
 
 \endgroup
 
-The Deflated Sharpe Ratio of @bailey2014deflated is calibrated for monthly cross-section panel Sharpe estimates over multi-year time series and is not well-defined at the event-level cross-section sample size used here. The $p = 1.0$ outcome is therefore interpreted as a small-sample artifact of the metric, not as evidence against the hypothesis. Relaxing the Bonferroni budget from $K = 18$ to $K = 6$ (no phase stratification) would lower the critical value to $t^* = 2.64$; the realized $t = 4.37$ remains comfortably above that threshold.
+None of the strict-inference checks pass under the corrected unique-amendment aggregation. The Welch $t$-statistic of $1.69$ does not reach uncorrected $\alpha = 0.05$ ($t^* = 2.0$); the Bootstrap 95-percent CI on the negative arm is not computable at $n_{\text{neg}} = 4$ because the implementation requires $n \ge 5$ for stable percentile estimation; the pre-registered $n_{\text{minority}} \ge 20$ inferential-lock threshold is not met. The Deflated Sharpe Ratio of @bailey2014deflated is calibrated for monthly cross-section panel Sharpe estimates over multi-year time series and is not well-defined at the event-level cross-section sample size used here, so the $p = 1.0$ outcome is interpreted as a small-sample artifact of the metric rather than as evidence against the hypothesis. Relaxing the Bonferroni budget from $K = 18$ to $K = 6$ (no phase stratification) would lower the critical value to $t^* = 2.64$; the realized $t = 1.69$ remains below that threshold as well.
+
+The directional effect—$+7.48$ percentage points spread between positive and negative pivotal-shift amendments at the thirty-day horizon—is preserved relative to the inflated-significance draft, but no strict-inference check passes at the current minority-class size. Restoring the strict-significance certificate would require either expanding the labeled-amendment sample to push $n_{\text{negative}}$ above the conservative $n \ge 20$ floor (estimated under current pivotal-shift base rates at roughly $400$ to $500$ additional unique amendment events), or adopting an alternative inferential framework (e.g.\ a permutation test or a hierarchical posterior on the spread) that is better-suited to the minority-class regime.
 
 # Robustness
 
 ## Cross-Vendor Disagreement
 
-The 0.71 percent of cases in which the three vendors fail to reach two-of-three majority cluster on the driver axis—where the locus of decision-making is often left implicit in the amendment text—and on the pivotal-shift axis when an amendment combines positive and negative components, such as a simultaneous endpoint dilution and sample-size expansion. Restricting the consensus rule to unanimous classifications reduces the minority-class size to 17, which falls below the inferential-lock threshold; the two-of-three majority is therefore the operative consensus rule throughout the paper.
+The 0.71 percent of cases in which the three vendors fail to reach two-of-three majority cluster on the driver axis—where the locus of decision-making is often left implicit in the amendment text—and on the pivotal-shift axis when an amendment combines positive and negative components, such as a simultaneous endpoint dilution and sample-size expansion. Restricting the consensus rule to unanimous classifications further reduces the labeled subsample and is therefore not adopted; the two-of-three majority is the operative consensus rule throughout the paper. Both consensus rules yield a unique-amendment minority class well below the pre-registered $n \ge 20$ floor at the current sample size, which is the relevant inferential constraint discussed in §5.6 and §7.
 
 ## Alternative Event-Date Specification
 
@@ -288,15 +292,15 @@ The event date in the headline tests is `LastUpdatePostDate`, which is the publi
 
 ## Factor-Model Orthogonalization
 
-The CARs reported throughout the paper are SPY-benchmarked. A standard exercise in the equity-event-study literature is to re-compute residuals from a Fama-French five-factor plus momentum model. This is not implemented in the present draft because daily-frequency factor data joined to each event window adds substantial pipeline cost. Existing event-study literature [@brown1985daily] suggests that for short event windows the choice of benchmark matters at the order of 10–20 percent of the $t$-statistic; given the realized $t = 4.37$ with margin 1.38 above the Bonferroni threshold, the conclusion would survive even a 20-percent attenuation. This is marked as expected rather than verified robustness.
+The CARs reported throughout the paper are SPY-benchmarked. A standard exercise in the equity-event-study literature is to re-compute residuals from a Fama-French five-factor plus momentum model. This is not implemented in the present draft because daily-frequency factor data joined to each event window adds substantial pipeline cost. Existing event-study literature [@brown1985daily] suggests that for short event windows the choice of benchmark matters at the order of $10$ to $20$ percent of the $t$-statistic; under the dedup-corrected Welch $t = 1.69$ a $20$-percent attenuation would not change the verdict because the test is already below uncorrected $\alpha = 0.05$. The factor-model exercise is therefore reframed as a future-work item that would be informative chiefly under a larger labeled-amendment sample where the dedup-corrected test is closer to the conventional threshold.
 
 # Limitations
 
 The following limitations are documented for transparency.
 
-1. **Effective sample size.** The realized $n = 80$ for the regression and $n = 152$ for the CAR test are below the levels at which parametric coefficient $t$-statistics are reliable; the partial-$\alpha$ $t = 0.958$ on $\text{Pivotal}$ is small-sample standard-error inflation rather than thesis weakness. Bootstrap and portfolio-Sharpe non-parametric tests confirm the same signal.
+1. **Effective sample size.** The realized $n = 80$ unique-amendment observations for both the cross-section CAR test and the OLS regression are below the levels at which parametric coefficient $t$-statistics are reliable, and the minority-class size of $4$ unique negative-pivotal-shift amendments is far below the conservative $n \ge 20$ inferential-lock threshold. The directional spread of $+7.48$ percentage points is documented as a preliminary scout-feasible candidate rather than a deployed alpha. The partial-$\alpha$ $t = 0.958$ on $\text{Pivotal}$ in the OLS regression is small-sample standard-error inflation; the portfolio-Sharpe non-parametric tests retain the same directional ranking ($\Delta\text{Sharpe} = +0.341$, pivotal-only Sharpe $1.088$) because Sharpe is a ranking statistic less sensitive to standard-error scale than a parametric $t$.
 
-2. **Survivorship bias in sponsor-to-ticker mapping.** The 36-percent mapping yield is concentrated in foreign-domiciled biotechs (a coverage limitation) and in private firms or pre-IPO academic spin-offs (a bias against the negative arm, since trial-failed firms are less likely to complete an IPO). To the extent this bias operates, the reported $-7.65\%$ mean CAR on the negative arm is a conservative underestimate of the true effect.
+2. **Survivorship bias in sponsor-to-ticker mapping.** The 36-percent mapping yield is concentrated in foreign-domiciled biotechs (a coverage limitation) and in private firms or pre-IPO academic spin-offs (a bias against the negative arm, since trial-failed firms are less likely to complete an IPO). To the extent this bias operates, the reported $-7.34\%$ mean CAR on the negative arm is a conservative underestimate of the true effect.
 
 3. **Vaccine-cohort stratification.** The 2020–2022 COVID-19, RSV, and influenza vaccine trials are known to exhibit a sell-the-news pattern that may differ from oncology and metabolic trials. Stratified analysis is left for future work.
 
@@ -314,9 +318,56 @@ The following limitations are documented for transparency.
 
 10. **Factor-model orthogonalization deferred.** The headline results are SPY-benchmarked. FF5+UMD residual orthogonalization requires daily factor data joined to event windows and is left for future work.
 
+11. **Row-aggregation independence violation in earlier draft.** An earlier draft of this paper reported the cross-section CAR test on row-iteration aggregation of the per-event re-classification manifest (`data/manifest_car.jsonl`), treating each re-classification row as an independent observation in Welch's two-sample test. This violated Welch's independent-observation assumption and inflated the test statistic. The present revision uses one observation per unique amendment event identified by the pair (NCT identifier, event date), with a consensus pivotal-shift label computed as the most-common non-unknown vote across the rows for that amendment. The directional effect is preserved while the strict-significance certificate is withdrawn; the full audit is recorded in §7.
+
+# Post-Publication Self-Correction
+
+## Row-Aggregation Dedup Audit (2026-05-17)
+
+An earlier version of this working paper, distributed under the title *Protocol Amendments and Cross-Section Pharmaceutical Stock Returns: A Bonferroni-Strict Event Study from ClinicalTrials.gov*, reported a Welch's $t$-statistic of $4.37$ on the long-positive minus short-negative cross-section spread at the thirty-trading-day horizon, with the headline summary $n_{\text{long}} = 96$, $n_{\text{short}} = 21$, spread $+7.79$ percentage points, Bonferroni-$K = 18$ critical value $t^* = 2.99$, and a verdict of \emph{strict Bonferroni-PASS} with margin $1.38$. Reproduction of those numbers from the public commit failed.
+
+### What went wrong
+
+The CAR manifest at `data/manifest_car.jsonl` stores one row per (event, classification run) pair. Each unique amendment event identified by the pair (NCT identifier, event date) is therefore represented by multiple rows—typically five to ten—because the LLM extraction was re-dispatched across vendors and prompt versions during the pipeline build-out. The implementation of the cross-section CAR test in `src/clinicaltrials_amendment_llm/rigor_pass.py` and the day-14 mid-checkpoint script `day14_midcheckpoint.py` iterated this manifest row-by-row and appended each row's CAR value to its label's bucket. The same amendment's CAR was therefore counted five-to-ten times against the negative or positive bucket, depending on how many re-classification rows survived in the final manifest. Welch's two-sample $t$-statistic assumes independent observations; replicated rows of the same event are not independent and the standard-error denominator is artificially shrunk by approximately the square-root of the per-event row multiplicity.
+
+### Magnitude of the inflation
+
+\begingroup\small
+
+| Quantity                                  | Row aggregation (earlier draft) | Dedup correction (this revision) |
+|:------------------------------------------|--------------------------------:|---------------------------------:|
+| Source-data cut                            | `bcf2144` (Layer A LOCKED commit) | `c438dc6` (current main HEAD)    |
+| $n_{\text{long}}$                          | 96 (rows)                       | 16 (unique amendments)           |
+| $n_{\text{short}}$                         | 21 (rows)                       | 4 (unique amendments)            |
+| Mean CAR, long                             | $+0.14\%$                       | $+0.14\%$                        |
+| Mean CAR, short                            | $-7.65\%$                       | $-7.34\%$                        |
+| Cross-section spread                       | $+7.79\%$                       | $+7.48\%$                        |
+| Welch $t$                                  | $4.37$                          | $1.69$                           |
+| Welch standard-error (long − short)        | $\approx 1.78\%$                | $\approx 4.42\%$                 |
+| Degrees of freedom (Welch–Satterthwaite)   | $\approx 76$                    | $\approx 10$                     |
+| Bonferroni-$K = 18$ critical $t^* = 2.99$  | PASS                            | FAIL                             |
+| Uncorrected $\alpha = 0.05$ ($t^* = 2.0$)  | PASS                            | FAIL                             |
+| Minority-class lock $n_{\text{neg}} \ge 20$| PASS ($n = 21$ rows)            | FAIL ($n = 4$ unique amendments) |
+
+\endgroup
+
+The direction of the signal and the magnitude of the cross-section spread are essentially unchanged—negative pivotal-shift amendments underperform SPY by between seven and eight percent over thirty trading days—but the strict-significance certificate is withdrawn. The Welch $t$-statistic falls from $4.37$ (row aggregation) to $1.69$ (unique-amendment dedup), and the bootstrap 95-percent CI on the negative arm of $[-9.97\%, -5.11\%]$ reported in the earlier draft was computed on the same non-independent rows and is withdrawn together with the inflated $t$. The OLS regression for the incremental Sharpe test in §5.3 was already at the unique-amendment level by construction (its implementation uses dictionary-keyed dedup) and is therefore unaffected; $\Delta\text{Sharpe} = +0.341$ over the phase-only baseline and the standalone pivotal-only Sharpe of $1.088$ stand.
+
+### Diagnostic procedure
+
+The discrepancy was discovered during preparation of a LinkedIn writeup that attempted to visualize each unique amendment as a single point. The visualization counted approximately $20$ classified-non-neutral unique amendments while the earlier draft's headline claimed $96 + 21 = 117$. Tracing this gap exposed the row-iteration aggregation in `rigor_pass.py` and `day14_midcheckpoint.py`. A direct dedup-audit script (`output/linkedin/dedup_audit.py` in the author's career-workspace) confirmed the magnitude of the inflation. The corrected `rigor_pass.py` now preserves the original row-aggregated values under the JSON key `pre_dedup_raw_for_audit` for reproducibility, and computes the dedup-corrected unique-amendment statistics as the primary output. The strict positive-versus-negative test is also reported separately under the JSON key `strict_positive_vs_negative` so that the paper's original framing remains directly inspectable from the artifact.
+
+### Why this is reported rather than silently amended
+
+This paper was distributed under a public commit hash (Appendix B) and a public abstract on SSRN (resubmission in flight as of 2026-05-14). A silent in-place edit would be inconsistent with the reproducibility-from-public-commit commitment in Appendix B, and would create an asymmetry between the SSRN distribution copy and the repository copy. The audit is therefore documented in this section and the previous strict-significance headlines—Welch $t = 4.37$, Bonferroni-strict PASS, $n_{\text{negative}} = 21$ lock-safe—are explicitly retracted. The contribution claims listed in §1 are otherwise preserved: the unit of analysis is still the post-trial-start protocol amendment, the three-axis schema and the cross-vendor majority diagnostic remain valid, and the incremental Sharpe test over the phase-only baseline is unaffected.
+
+### Path to restoring the strict certificate
+
+Under the current pivotal-shift base rate in the labeled-amendment subsample—approximately twenty percent split between positive and negative labels, with negative roughly $20$ percent of that twenty percent—reaching the conservative $n_{\text{negative}} \ge 20$ floor at the unique-amendment level requires labeling approximately $400$ to $500$ additional unique amendment events. This is a one-to-two-order-of-magnitude expansion relative to the present $80$ unique-amendment sample and is operationally feasible within the existing pipeline ($\approx \$10$ in additional LLM credits under the present per-amendment cost) but requires substantially more PDF parsing throughput than the present rate-limited 819-PDF cache. Restoring the strict-significance certificate is left for a successor revision.
+
 # Conclusion
 
-The cross-section spread between LLM-classified positive and negative protocol amendments at the thirty-trading-day horizon is +7.79 percent with Welch $t = 4.37$, which survives strict Bonferroni-$K = 18$ correction. The LLM amendment features add an incremental Sharpe of +0.341 above a transparent phase-only baseline that proxies the @reinisch2024ctpllm phase-transition predictor. The schema is supported by 99.29-percent two-of-three cross-vendor majority agreement and the minority-class size of 21 satisfies the conservative threshold below which label-distribution-sensitive estimators are unstable.
+The cross-section spread between LLM-classified positive and negative protocol amendments at the thirty-trading-day horizon is $+7.48$ percentage points at the unique-amendment level, with Welch $t = 1.69$ on $n_{\text{long}} = 16$ versus $n_{\text{short}} = 4$ unique amendments. The directional effect is preserved relative to the row-aggregated earlier draft, but neither the conventional $\alpha = 0.05$ threshold nor the strict Bonferroni-$K = 18$ critical value of $2.99$ is met; the contribution is therefore documented as a preliminary scout-feasible candidate rather than a deployed alpha. The LLM amendment features add an incremental Sharpe of $+0.341$ above a transparent phase-only baseline that proxies the @reinisch2024ctpllm phase-transition predictor, and the standalone pivotal-only portfolio delivers Sharpe $1.088$; the incremental-Sharpe test was already at unique-amendment level by construction and is unaffected by the row-aggregation correction discussed in §7. The schema is supported by $99.29$-percent two-of-three cross-vendor majority agreement on the $95$-trial subsample with full three-vendor coverage, but the minority-class size of $4$ unique negative-pivotal-shift events is below the conservative $n \ge 20$ inferential-lock threshold and the strict-significance certificate is therefore withdrawn until the labeled-amendment sample is expanded.
 
 The contribution is positioned at the boundary of three literatures. Relative to the trial-announcement and trial-result event-study literature, the unit of analysis is redefined as the post-trial-start protocol amendment—a continuous mid-event stream that is informationally distinct from announcements and results, and that exhibits multi-day to multi-week price drift. Relative to the protocol-amendment operational literature, the same event class is mapped into firm-level equity returns. Relative to LLM applications on ClinicalTrials.gov text, LLMs are applied to amendment text rather than registration text and the output is connected to financial outcomes. Relative to CTP-LLM, the input is shifted from initial protocol to amendment text, vendor diversity is introduced as a schema-validity diagnostic, and incremental Sharpe over the phase-only baseline is verified.
 

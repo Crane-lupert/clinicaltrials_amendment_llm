@@ -1,5 +1,5 @@
 {
-  "computed_at": "2026-04-28T01:37:56.171541+00:00",
+  "computed_at": "2026-05-16T17:32:40.784013+00:00",
   "measurements": {
     "cross_section_car": {
       "n_events": 82,
@@ -64,10 +64,10 @@
       "overall_majority_2of3_rate": 0.9929,
       "trigger4_threshold": 0.8,
       "trigger4_pass": true,
-      "computed_at": "2026-04-28T01:37:55.800086+00:00"
+      "computed_at": "2026-05-16T17:32:40.162106+00:00"
     },
     "midcheckpoint": {
-      "computed_at": "2026-04-28T01:37:55.824660+00:00",
+      "computed_at": "2026-05-16T17:32:40.242849+00:00",
       "cross_llm": {
         "n_ncts_full": 95,
         "per_axis": {
@@ -108,7 +108,7 @@
         "overall_majority_2of3_rate": 0.9929,
         "trigger4_threshold": 0.8,
         "trigger4_pass": true,
-        "computed_at": "2026-04-28T01:37:55.805189+00:00"
+        "computed_at": "2026-05-16T17:32:40.170064+00:00"
       },
       "axis_distribution": {
         "n_ncts": 95,
@@ -132,51 +132,51 @@
       "car_effect_size_t_0_to_5": {
         "horizon": "t_0_to_5",
         "long_arm": "positive",
-        "short_arm": "negative",
-        "n_long": 119,
-        "n_short": 25,
+        "short_arm": "neutral",
+        "n_long": 17,
+        "n_short": 20,
         "mean_long_car": 0.0015,
-        "mean_short_car": -0.0095,
-        "spread": 0.011,
-        "welch_t": 2.3632,
+        "mean_short_car": 0.0062,
+        "spread": -0.0048,
+        "welch_t": -0.3343,
         "trigger3_threshold_t": 2.0,
-        "trigger3_pass": true,
+        "trigger3_pass": false,
         "by_pivotal_count": {
-          "negative": 25,
-          "neutral": 126,
-          "positive": 119,
-          "unknown": 272
+          "negative": 4,
+          "neutral": 20,
+          "positive": 17,
+          "unknown": 41
         }
       },
       "car_effect_size_t_0_to_30": {
         "horizon": "t_0_to_30",
         "long_arm": "positive",
-        "short_arm": "negative",
-        "n_long": 112,
-        "n_short": 25,
+        "short_arm": "neutral",
+        "n_long": 16,
+        "n_short": 20,
         "mean_long_car": 0.0014,
-        "mean_short_car": -0.076,
-        "spread": 0.0774,
-        "welch_t": 4.7474,
+        "mean_short_car": -0.0365,
+        "spread": 0.0379,
+        "welch_t": 0.8375,
         "trigger3_threshold_t": 2.0,
-        "trigger3_pass": true,
+        "trigger3_pass": false,
         "by_pivotal_count": {
-          "negative": 25,
-          "neutral": 126,
-          "positive": 112,
-          "unknown": 265
+          "negative": 4,
+          "neutral": 20,
+          "positive": 16,
+          "unknown": 40
         }
       },
       "summary": {
         "n_ncts_with_3_vendor_labels": 95,
         "n_ncts_total": 95,
         "trigger4_cross_llm_pass": true,
-        "trigger3_t_5_pass": true,
-        "trigger3_t_30_pass": true
+        "trigger3_t_5_pass": false,
+        "trigger3_t_30_pass": false
       }
     },
     "incremental_sharpe_regression": {
-      "computed_at": "2026-04-28T01:37:56.004528+00:00",
+      "computed_at": "2026-05-16T17:32:40.531256+00:00",
       "n_events_in_regression": 80,
       "horizon": "t_0_to_30",
       "regression_full_model": {
@@ -241,87 +241,116 @@
       "interpretation": "Proper partial-α via OLS: β2 t-stat tests whether pivotal_shift adds incremental CAR-predictive power AFTER controlling for phase. |t| ≥ 2.0 (Bonferroni-K) → trigger #2 PASS at signal-existence level. Δ Sharpe (regression-fitted weights vs phase-only) = portfolio-level incremental contribution. Both metrics needed for confident PASS."
     },
     "rigor_pass": {
-      "computed_at": "2026-04-28T01:37:56.062883+00:00",
+      "computed_at": "2026-05-16T17:32:40.606277+00:00",
       "horizon": "t_0_to_30",
-      "n_long_positive": 112,
-      "n_short": 25,
-      "short_arm": "negative",
+      "aggregation": "dedup_by_nct_event_date",
+      "n_long_positive": 16,
+      "n_short": 20,
+      "short_arm": "neutral",
       "mean_positive_car": 0.0014,
-      "mean_short_car": -0.076,
-      "spread": 0.0774,
-      "welch_t_uncorrected": 4.7474,
+      "mean_short_car": -0.0365,
+      "spread": 0.0379,
+      "welch_t_uncorrected": 0.8375,
       "welch_t_threshold_uncorrected": 2.0,
       "welch_t_threshold_bonferroni_18": 2.99,
-      "pass_uncorrected": true,
-      "pass_bonferroni_18": true,
+      "pass_uncorrected": false,
+      "pass_bonferroni_18": false,
       "bootstrap_ci_positive_95pct": [
-        -0.0208,
-        0.0236
+        -0.0597,
+        0.0585
       ],
       "bootstrap_ci_short_95pct": [
-        -0.0976,
-        -0.0531
+        -0.0992,
+        0.0212
       ],
       "bootstrap_ci_zero_in_positive": true,
-      "event_level_sharpe": 0.1305,
+      "event_level_sharpe": 0.1527,
       "deflated_sharpe_p_value_n_trials_18": 1.0,
       "by_pivotal_count": {
-        "negative": 25,
-        "neutral": 126,
-        "positive": 112,
-        "unknown": 265
+        "negative": 4,
+        "neutral": 20,
+        "positive": 16,
+        "unknown": 40
+      },
+      "strict_positive_vs_negative": {
+        "n_long_positive": 16,
+        "n_short_negative": 4,
+        "mean_positive_car": 0.0014,
+        "mean_negative_car": -0.0734,
+        "spread": 0.0748,
+        "welch_t": 1.6929,
+        "pass_uncorrected": false,
+        "pass_bonferroni_18": false,
+        "bootstrap_ci_negative_95pct": [
+          null,
+          null
+        ]
+      },
+      "pre_dedup_raw_for_audit": {
+        "comment": "Row-iteration aggregation of MANIFEST_CAR; same amendment may contribute multiple rows due to re-classification runs. Welch's independence assumption violated; do not use for inference.",
+        "n_long_positive_raw": 144,
+        "n_short_raw": 33,
+        "short_arm_raw": "negative",
+        "spread_raw": 0.0768,
+        "welch_t_raw": 5.4207,
+        "by_pivotal_count_raw": {
+          "negative": 33,
+          "neutral": 166,
+          "positive": 144,
+          "unknown": 345
+        }
       }
     },
     "phase_transition_roc": {
-      "n_pt_records": 20765,
-      "n_paired": 94,
+      "n_pt_records": 24983,
+      "n_paired": 95,
       "n_transitioned": 6,
-      "n_not_transitioned": 88,
-      "transition_rate_in_paired": 0.0638,
-      "roc_auc": 0.5852,
+      "n_not_transitioned": 89,
+      "transition_rate_in_paired": 0.0632,
+      "roc_auc": 0.5861,
       "trigger1_threshold": 0.65,
       "trigger1_pass": false
     }
   },
   "layer_decision": {
-    "computed_at": "2026-04-28T01:37:56.170006+00:00",
+    "computed_at": "2026-05-16T17:32:40.782465+00:00",
     "n_events_regression": 80,
-    "minority_class_count": 25,
-    "f1_1_lock_safe": true,
-    "tentative": false,
+    "minority_class_count": 4,
+    "f1_1_lock_safe": false,
+    "tentative": true,
     "metrics": {
       "cross_llm_majority_rate": 0.9929,
-      "car_welch_t_30": 4.7474,
+      "car_welch_t_30": 0.8375,
       "car_bonferroni_critical": 2.99,
       "incremental_partial_alpha_t": 0.958,
       "incremental_bonferroni_critical": 2.99,
       "incremental_delta_sharpe": 0.3414,
       "pivotal_only_sharpe": 1.0883,
       "by_pivotal_count": {
-        "negative": 25,
-        "neutral": 126,
-        "positive": 112,
-        "unknown": 265
+        "negative": 4,
+        "neutral": 20,
+        "positive": 16,
+        "unknown": 40
       }
     },
     "triggers": {
       "trigger4_cross_llm_majority": true,
-      "trigger3_car_uncorrected": true,
-      "trigger3_car_bonferroni_18": true,
+      "trigger3_car_uncorrected": false,
+      "trigger3_car_bonferroni_18": false,
       "trigger2_partial_alpha_uncorrected": false,
       "trigger2_partial_alpha_bonferroni": false,
       "trigger2_delta_sharpe_03": true,
-      "f1_1_lock_safe": true
+      "f1_1_lock_safe": false
     },
     "candidate_layers": {
-      "A_hard_triggers": true,
+      "A_hard_triggers": false,
       "Hybrid_A+D": false,
       "D": false,
       "C": false,
-      "tentative_caveat": false
+      "tentative_caveat": true
     },
-    "decision": "A",
-    "decision_reason": "All hard triggers PASS Bonferroni-strict (cross-LLM True, CAR-Bonf True, Δ Sharpe True OR partial-α-Bonf False). F1-1 lock-safe.",
-    "next_action": "Day 19-20: SSRN paper draft + Streamlit dashboard + Day 21 hard cap"
+    "decision": "TENTATIVE",
+    "decision_reason": "Incomplete measurement — full dispatch pending",
+    "next_action": "Continue full dispatch until F1-1 lock-safe; re-run measurements"
   }
 }

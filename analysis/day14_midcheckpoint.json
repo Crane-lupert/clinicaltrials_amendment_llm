@@ -1,5 +1,5 @@
 {
-  "computed_at": "2026-04-28T01:37:55.824660+00:00",
+  "computed_at": "2026-05-16T17:32:40.242849+00:00",
   "cross_llm": {
     "n_ncts_full": 95,
     "per_axis": {
@@ -40,7 +40,7 @@
     "overall_majority_2of3_rate": 0.9929,
     "trigger4_threshold": 0.8,
     "trigger4_pass": true,
-    "computed_at": "2026-04-28T01:37:55.805189+00:00"
+    "computed_at": "2026-05-16T17:32:40.170064+00:00"
   },
   "axis_distribution": {
     "n_ncts": 95,
@@ -64,46 +64,46 @@
   "car_effect_size_t_0_to_5": {
     "horizon": "t_0_to_5",
     "long_arm": "positive",
-    "short_arm": "negative",
-    "n_long": 119,
-    "n_short": 25,
+    "short_arm": "neutral",
+    "n_long": 17,
+    "n_short": 20,
     "mean_long_car": 0.0015,
-    "mean_short_car": -0.0095,
-    "spread": 0.011,
-    "welch_t": 2.3632,
+    "mean_short_car": 0.0062,
+    "spread": -0.0048,
+    "welch_t": -0.3343,
     "trigger3_threshold_t": 2.0,
-    "trigger3_pass": true,
+    "trigger3_pass": false,
     "by_pivotal_count": {
-      "negative": 25,
-      "neutral": 126,
-      "positive": 119,
-      "unknown": 272
+      "negative": 4,
+      "neutral": 20,
+      "positive": 17,
+      "unknown": 41
     }
   },
   "car_effect_size_t_0_to_30": {
     "horizon": "t_0_to_30",
     "long_arm": "positive",
-    "short_arm": "negative",
-    "n_long": 112,
-    "n_short": 25,
+    "short_arm": "neutral",
+    "n_long": 16,
+    "n_short": 20,
     "mean_long_car": 0.0014,
-    "mean_short_car": -0.076,
-    "spread": 0.0774,
-    "welch_t": 4.7474,
+    "mean_short_car": -0.0365,
+    "spread": 0.0379,
+    "welch_t": 0.8375,
     "trigger3_threshold_t": 2.0,
-    "trigger3_pass": true,
+    "trigger3_pass": false,
     "by_pivotal_count": {
-      "negative": 25,
-      "neutral": 126,
-      "positive": 112,
-      "unknown": 265
+      "negative": 4,
+      "neutral": 20,
+      "positive": 16,
+      "unknown": 40
     }
   },
   "summary": {
     "n_ncts_with_3_vendor_labels": 95,
     "n_ncts_total": 95,
     "trigger4_cross_llm_pass": true,
-    "trigger3_t_5_pass": true,
-    "trigger3_t_30_pass": true
+    "trigger3_t_5_pass": false,
+    "trigger3_t_30_pass": false
   }
 }

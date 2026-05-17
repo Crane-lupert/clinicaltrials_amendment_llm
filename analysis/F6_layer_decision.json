@@ -1,41 +1,41 @@
 {
-  "computed_at": "2026-04-28T01:37:56.170006+00:00",
+  "computed_at": "2026-05-16T17:32:40.782465+00:00",
   "n_events_regression": 80,
-  "minority_class_count": 25,
-  "f1_1_lock_safe": true,
-  "tentative": false,
+  "minority_class_count": 4,
+  "f1_1_lock_safe": false,
+  "tentative": true,
   "metrics": {
     "cross_llm_majority_rate": 0.9929,
-    "car_welch_t_30": 4.7474,
+    "car_welch_t_30": 0.8375,
     "car_bonferroni_critical": 2.99,
     "incremental_partial_alpha_t": 0.958,
     "incremental_bonferroni_critical": 2.99,
     "incremental_delta_sharpe": 0.3414,
     "pivotal_only_sharpe": 1.0883,
     "by_pivotal_count": {
-      "negative": 25,
-      "neutral": 126,
-      "positive": 112,
-      "unknown": 265
+      "negative": 4,
+      "neutral": 20,
+      "positive": 16,
+      "unknown": 40
     }
   },
   "triggers": {
     "trigger4_cross_llm_majority": true,
-    "trigger3_car_uncorrected": true,
-    "trigger3_car_bonferroni_18": true,
+    "trigger3_car_uncorrected": false,
+    "trigger3_car_bonferroni_18": false,
     "trigger2_partial_alpha_uncorrected": false,
     "trigger2_partial_alpha_bonferroni": false,
     "trigger2_delta_sharpe_03": true,
-    "f1_1_lock_safe": true
+    "f1_1_lock_safe": false
   },
   "candidate_layers": {
-    "A_hard_triggers": true,
+    "A_hard_triggers": false,
     "Hybrid_A+D": false,
     "D": false,
     "C": false,
-    "tentative_caveat": false
+    "tentative_caveat": true
   },
-  "decision": "A",
-  "decision_reason": "All hard triggers PASS Bonferroni-strict (cross-LLM True, CAR-Bonf True, Δ Sharpe True OR partial-α-Bonf False). F1-1 lock-safe.",
-  "next_action": "Day 19-20: SSRN paper draft + Streamlit dashboard + Day 21 hard cap"
+  "decision": "TENTATIVE",
+  "decision_reason": "Incomplete measurement — full dispatch pending",
+  "next_action": "Continue full dispatch until F1-1 lock-safe; re-run measurements"
 }
