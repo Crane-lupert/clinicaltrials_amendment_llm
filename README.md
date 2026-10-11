@@ -2,22 +2,46 @@
 
 ClinicalTrials.gov v2 amendment text × multi-vendor LLM ensemble × 3-axis *pivotal shift* classification → biotech forward CAR cross-section.
 
-**Status**: ✅ **Layer A LOCKED** (Phase 1 closed 2026-04-28). **한국어 실무 보고**: [README_KR.md](README_KR.md).
-**Type**: discovery-form alpha-research, F1 frozen swap-queue 1순위 fill, **portfolio first Layer A success**.
+**Status**: ❌ **Layer A LOCK retracted** — locked 2026-04-28, downgraded 2026-05-17 (self-correction #1), no pre-registered pass route left after self-correction #2 (2026-10-11). Pre-registered close path: writeup-only freeze. See *Erratum* below. **한국어 실무 보고**: [README_KR.md](README_KR.md).
+**Type**: discovery-form alpha-research, F1 frozen swap-queue 1순위 fill (the Layer A claim is retracted — see *Erratum*).
 **Daemon**: PURE daemon-free (Gate F ✓) — ClinicalTrials.gov v2 API + yfinance + OpenRouter only.
 
-## Layer A headline metrics
+## Erratum — Post-publication self-correction #2 (2026-10-11)
+
+The incremental-Sharpe result (Phase 1 trigger #2, "ΔSharpe = +0.341 ≥ 0.30, PASS") is **withdrawn**. It was the last pass claim left after self-correction #1.
+
+**Previously reported**: baseline (phase only) 0.194, full (regression-fitted) 0.535, ΔSharpe **+0.341** (margin 0.041); pivotal-only 1.088; "additive 0.066 → regression-fitted 0.341" presented as a scale-mismatch fix.
+
+**What is wrong.** The arithmetic reproduces exactly from `data/manifest_*.jsonl`. The statistic cannot carry the gate:
+
+1. Each "Sharpe" is mean / sd × √n over the 52 pooled long and sign-flipped short events, i.e. a one-sample t-statistic. Per event, ΔSharpe = **0.047**.
+2. The full-model weights are OLS-fitted on the same 80 events that are then ranked. Under a permutation null (shuffle CAR, refit OLS, 10,000 draws), **68%** of draws reach ΔSharpe ≥ 0.341. The test does not separate the result from noise.
+3. With leave-one-out weights, ΔSharpe = **−0.78**.
+4. Scores take only 3–9 distinct values, so the tercile cut falls inside tied groups, and leg membership follows manifest row order. Random tie order gives a median of 0.28 (90% range −0.62 to +1.15); reversed row order gives 0.21.
+5. "0.066 → 0.341" compares different samples. On the 70-event sample that produced 0.066 (additive), the regression-fitted ΔSharpe was −0.028. On the 80-event sample, the additive ΔSharpe is +0.427. The pass came from 10 added events, not from the change of method.
+
+The pivotal-only 1.088 is the same pooled t-statistic (per event 0.15; tie-order 90% range −0.77 to +2.12). It is not evidence of a standalone signal.
+
+**Consequence.** Trigger #2 is not passed. The only other pass route, partial-α t ≥ 2.0, also fails (t = 0.958). Under the pre-registered rule (CLAUDE.md, Phase 1 #2) the project closes as a writeup-only freeze: a negative incremental result.
+
+**How it was found.** A multi-model code review on 2026-10-10 flagged the routine, and an independent recomputation on 2026-10-11 confirmed it. The project's own audit gates did not catch it.
+
+Self-correction #1 (2026-05-17, row-aggregation dedup: Welch t 4.37 → 1.69, negative arm n = 21 → 4) is documented in the paper, but this README had not been updated for it. The table below now reflects both corrections. Original values: Welch t 4.371 ✅, ΔSharpe 0.341 ✅, minority class 21 ✅ LOCK-SAFE, abandon triggers fired 0, negative-arm CAR −7.65% (n = 21) vs positive +0.14% (n = 96), spread +7.79%.
+
+Paper: `analysis/paper_v2_en.md`, section "Erratum / Post-Publication Self-Correction #2". The PDF is regenerated in the same commit.
+
+## Headline metrics (corrected 2026-10-11)
 
 | Trigger | Threshold | Final value | Verdict |
 |---|---|---:|---|
 | #4 Cross-LLM 2/3 majority | ≥ 80% | **99.29%** | ✅ |
-| #3 CAR T+30 Welch t (Bonferroni-18) | ≥ 2.99 | **4.371** | ✅ |
-| #2 Δ Sharpe (regression-fitted) | ≥ 0.30 | **0.341** | ✅ |
-| F1-1 minority class lock | ≥ 20 | **21** | ✅ LOCK-SAFE |
+| #3 CAR T+30 Welch t (Bonferroni-18) | ≥ 2.99 | **1.69** (unique amendments, n = 16 vs 4) | ❌ (self-correction #1) |
+| #2 Δ Sharpe (regression-fitted) | ≥ 0.30 | not passed (in-sample 0.341 is a pooled t difference; permutation p ≈ 0.68; leave-one-out −0.78) | ❌ (self-correction #2) |
+| F1-1 minority class lock | ≥ 20 | **4** | ❌ |
 | Cumulative spend | ≤ $30 | **$0.47** | ✅ (1.6%) |
-| Abandon trigger fired | 0 | **0** | ✅ |
+| Abandon trigger fired | 0 | **#2** (writeup-only freeze) | ❌ |
 
-**Cross-section CAR**: negative pivotal-shift trials show **−7.65%** mean T+30 CAR vs SPY (n=21), versus positive **+0.14%** (n=96). Spread +7.79%, Bonferroni-18-strict significant.
+**Cross-section CAR**: negative pivotal-shift amendments show **−7.34%** mean T+30 CAR vs SPY (n = 4 unique amendments), versus positive **+0.14%** (n = 16). Spread +7.48%, Welch t = 1.69: not significant.
 
 **Paper draft**: [analysis/F6_paper_draft.md](analysis/F6_paper_draft.md) (8-12pp, SSRN-ready).
 **Dashboard**: `streamlit run src/clinicaltrials_amendment_llm/dashboard.py` (5-page MVP).

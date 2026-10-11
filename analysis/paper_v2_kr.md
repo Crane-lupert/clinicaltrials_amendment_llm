@@ -2,6 +2,8 @@
 
 > **⚠️ 2026-05-17 — KR companion 미동기화 안내**: 본 문서는 한국어 검토용 v2 draft (2026-05-06 작성) 의 *pre-dedup-audit* 버전. **English canonical paper (`analysis/paper_v2_en.md` / `.pdf`) 는 2026-05-17 dedup audit 으로 supersede 됨** — Welch t = 4.37 (row-aggregation, inflated) → **1.69 (unique-amendment dedup, FAIL Bonferroni-18 + FAIL uncorrected)**. directional finding (-7.48% spread) 보존, strict-significance certificate 철회. SSRN worktrack 도 retire (GitHub-only pivot). 본 KR 문서의 헤드라인 ("Welch t = 4.37, Bonferroni-18 pass, Layer A LOCKED, n_minority=21 lock-safe", "Primary outcome locked") 은 모두 dedup 이전 framing. **canonical reference 는 EN paper §7 Post-Publication Self-Correction**. KR 동기화는 별도 future work.
 
+> **⚠️ 2026-10-11 — 정정 #2 (Incremental Sharpe)**: 본문의 "Incremental Sharpe Δ = +0.341 (Trigger #2 PASS)" 와 pivotal-only 1.088 은 근거가 되지 않는다. 각 포트폴리오 "Sharpe" 는 52개 사건 수익률의 평균 ÷ 표준편차에 √52 를 곱한 t 통계량이고, 가중치는 같은 사건들로 적합했다. 사건당 Sharpe 차이는 0.047, 신호를 없앤 순열 귀무에서도 68% 가 +0.341 이상, leave-one-out 표본 밖 차이는 −0.78 이다. 따라서 Trigger #2 는 FAIL 이고, F6 는 사전등록 규칙대로 writeup-only freeze (Layer D) 로 재분류되었다. 본 KR draft 의 해당 문장·표는 갱신하지 않았다 — 영문 정본 (`analysis/paper_v2_en.md` / `.pdf`) 의 "Erratum / Post-Publication Self-Correction #2" 절을 따른다.
+
 **버전**: v2 (한국어 검토용 draft, *pre-dedup-audit*)
 **작성**: 2026-05-06
 **대상 venue**: ~~SSRN preprint (Finance > Asset Pricing > Event Studies)~~ → GitHub-only (2026-05-17 SSRN pivot)
